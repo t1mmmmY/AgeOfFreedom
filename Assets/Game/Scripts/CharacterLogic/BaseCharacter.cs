@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Text;
 
-public class BaseCharacter : MonoBehaviour 
+//[System.Serializable]
+public class BaseCharacter 
 {
 	[SerializeField] protected CharacterStats _stats;
-	[SerializeField] protected Team _team;
+	protected Team _team;
 
 	public CharacterStats stats
 	{

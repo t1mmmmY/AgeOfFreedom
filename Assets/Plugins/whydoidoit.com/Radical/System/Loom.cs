@@ -20,17 +20,26 @@ public class Loom : MonoBehaviour
 			return _current;
 		}
 	}
-	
+
+	static bool running = false;
+
 	void Awake()
 	{
 		_current = this;
 		initialized = true;
+		running = true;
+	}
+
+	void OnDestroy()
+	{
+		running = false;
 	}
 	
 	static bool initialized;
 	
 	static void Initialize()
 	{
+
 		if (!initialized)
 		{
 		
@@ -55,10 +64,20 @@ public class Loom : MonoBehaviour
 	
 	public static void QueueOnMainThread(Action action)
 	{
+		if (!running)
+		{
+			return;
+		}
+
 		QueueOnMainThread( action, 0f);
 	}
 	public static void QueueOnMainThread(Action action, float time)
 	{
+		if (!running)
+		{
+			return;
+		}
+
 		if(time != 0)
 		{
 			lock(Current._delayed)
@@ -89,6 +108,11 @@ public class Loom : MonoBehaviour
 	
 	private static void RunAction(object action)
 	{
+		if (!running)
+		{
+			return;
+		}
+
 		try
 		{
 			((Action)action)();
@@ -108,7 +132,6 @@ public class Loom : MonoBehaviour
 	{
 		if (_current == this)
 		{
-			
 			_current = null;
 		}
 	}

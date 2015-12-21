@@ -31,7 +31,9 @@ public class Team
 		TeamsManager.Instance.AddTeam(this);
 
 		//TO DEL
-		teamColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+		System.Random rand = new System.Random();
+
+		teamColor = new Color((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
 	}
 
 	public void Recruit(CharacterAI character)
@@ -60,9 +62,5 @@ public class Team
 		}
 	}
 
-
-	public void Update()
-	{
-	}
 
 }

@@ -73,15 +73,16 @@ public class CharacterStats
 
 	public void InitRandomCharacter()
 	{
-		_charisma = Random.Range(1, 11);
-		_reputation = Random.Range(-5, 6);
-		_discipline = Random.Range(1, 11);
-		_loyalty = Random.Range(1, 11);
-		_fear = Random.Range(1, 5);
-		_fencing = Random.Range(1, 11);
-		_pistol = Random.Range(1, 11);
-		_sailing = Random.Range(1, 11);
-		_artillery = Random.Range(1, 11);
+		System.Random rand = new System.Random();
+		_charisma = rand.Next(1, 11);
+		_reputation = rand.Next(-5, 6);
+		_discipline = rand.Next(1, 11);
+		_loyalty = rand.Next(1, 11);
+		_fear = rand.Next(1, 5);
+		_fencing = rand.Next(1, 11);
+		_pistol = rand.Next(1, 11);
+		_sailing = rand.Next(1, 11);
+		_artillery = rand.Next(1, 11);
 	}
 
 	public override string ToString()

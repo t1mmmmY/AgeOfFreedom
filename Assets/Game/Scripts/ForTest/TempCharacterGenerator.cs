@@ -5,11 +5,16 @@ public class TempCharacterGenerator : MonoBehaviour
 {
 	[SerializeField] Rect mapRect;
 	[SerializeField] int countCharacters = 50;
-	[SerializeField] TestCharacterVisual characterPrefab;
+	[SerializeField] NPCCharacterVisual characterPrefab;
 
 	void Start()
 	{
 		CreateAllCharacters();
+	}
+
+	void OnDestroy()
+	{
+		CharactersManager.EndGame();
 	}
 
 	void CreateAllCharacters()
@@ -28,9 +33,10 @@ public class TempCharacterGenerator : MonoBehaviour
 		go.transform.position = RandomPositionInRect();
 		go.name = "Sailor " + number.ToString();
 
-		go.GetComponent<TestCharacterVisual>().Init();
+		NPCCharacterVisual character = go.GetComponent<NPCCharacterVisual>();
+		character.Init();
 
-		return go.GetComponent<CharacterAI>();
+		return character.brain;
 	}
 
 	Vector3 RandomPositionInRect()

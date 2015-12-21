@@ -2,10 +2,13 @@
 using System.Collections;
 using System.Linq;
 
+[System.Serializable]
 public class CharacterAI : BaseCharacter
 {
 	bool alive = false;
-	float brainTick = 0.5f;
+//	int brainTick = 500;
+
+	public System.Action onChangeTeam;
 
 	public void InitRandomCharacter()
 	{
@@ -14,7 +17,23 @@ public class CharacterAI : BaseCharacter
 		_team = null;
 
 		alive = true;
-		StartCoroutine("BrainWork");
+	}
+
+	public void Think()
+	{
+		BrainWork();
+//		if (!consciousness.IsAlive)
+//		{
+//			consciousness.Start();
+//		}
+	}
+
+	public void StopThink()
+	{
+//		if (consciousness.IsAlive)
+//		{
+//			consciousness.Abort();
+//		}
 	}
 
 	public bool WantToJoin(Team otherTeam)
@@ -41,7 +60,13 @@ public class CharacterAI : BaseCharacter
 		otherTeam.Recruit(this);
 
 		//TO DEL
-		SendMessage("ChangeTeam", _team, SendMessageOptions.DontRequireReceiver);
+		if (onChangeTeam != null)
+		{
+			Loom.QueueOnMainThread(onChangeTeam);
+//			onChangeTeam(team);
+		}
+
+//		SendMessage("ChangeTeam", _team, SendMessageOptions.DontRequireReceiver);
 	}
 
 	bool CheckIfWantToJoin(Team otherTeam)
@@ -86,15 +111,16 @@ public class CharacterAI : BaseCharacter
 	void OnDestroy()
 	{
 		alive = false;
-		StopCoroutine("BrainWork");
+//		StopCoroutine("BrainWork");
 	}
 
 
-	IEnumerator BrainWork()
+	void BrainWork()
 	{
-		do
-		{
-			yield return new WaitForSeconds(brainTick);
+//		do
+//		{
+//			Thread.Sleep(brainTick);
+//			yield return new WaitForSeconds(brainTick);
 
 			//Freelancer
 			if (_team == null)
@@ -117,14 +143,14 @@ public class CharacterAI : BaseCharacter
 				}
 			}
 
-		} while (alive);
+//		} while (alive);
 	}
 
 	void DoFreelancerWork()
 	{
 		if (DoIWantToCreateMyOwnTeam())
 		{
-			Debug.Log("I decided to create my own team! " + name);
+//			Debug.Log("I decided to create my own team! " + name);
 			CreateTeam();
 		}
 		else
@@ -139,7 +165,8 @@ public class CharacterAI : BaseCharacter
 
 	void DoCaptainWork()
 	{
-		RecruitTheTeam();
+		Loom.QueueOnMainThread(RecruitTheTeam);
+//		RecruitTheTeam();
 	}
 
 	void DoSailorWork()
@@ -150,7 +177,9 @@ public class CharacterAI : BaseCharacter
 
 	bool DoIWantToCreateMyOwnTeam()
 	{
-		float randomValue = Random.Range(0.5f, 1f) * Random.Range(1f, 100f) * 10;
+		System.Random rand = new System.Random();
+
+		float randomValue = (float)((rand.NextDouble() / 2f + 0.5f) * (rand.NextDouble() * 100 + 1) * 10);
 
 		if (randomValue < stats.charisma)
 		{
@@ -167,7 +196,7 @@ public class CharacterAI : BaseCharacter
 		CharacterAI someCharacter = GetRandomCharacter();
 		if (RecruitToTheTeam(someCharacter))
 		{
-			Debug.Log(someCharacter.name + " has joined team " + name);
+//			Debug.Log(someCharacter.name + " has joined team " + name);
 		}
 	}
 
@@ -182,7 +211,8 @@ public class CharacterAI : BaseCharacter
 									
 		if (availableCharacters.Count() > 0)
 		{
-			CharacterAI randomCharacter = (CharacterAI)availableCharacters.ToArray()[Random.Range(0, availableCharacters.Count())];
+			System.Random rand = new System.Random();
+			CharacterAI randomCharacter = (CharacterAI)availableCharacters.ToArray()[rand.Next(0, availableCharacters.Count())];
 			return randomCharacter;
 		}
 		else
