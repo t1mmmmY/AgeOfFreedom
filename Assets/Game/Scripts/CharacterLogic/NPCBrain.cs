@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 
 [System.Serializable]
-public class CharacterAI : BaseCharacter
+public class NPCBrain : BaseBrain
 {
 	bool alive = false;
 //	int brainTick = 500;
@@ -193,14 +193,14 @@ public class CharacterAI : BaseCharacter
 
 	void RecruitTheTeam()
 	{
-		CharacterAI someCharacter = GetRandomCharacter();
+		NPCBrain someCharacter = GetRandomCharacter();
 		if (RecruitToTheTeam(someCharacter))
 		{
 //			Debug.Log(someCharacter.name + " has joined team " + name);
 		}
 	}
 
-	CharacterAI GetRandomCharacter()
+	NPCBrain GetRandomCharacter()
 	{
 		bool characterInTheTeam = false;
 
@@ -212,7 +212,7 @@ public class CharacterAI : BaseCharacter
 		if (availableCharacters.Count() > 0)
 		{
 			System.Random rand = new System.Random();
-			CharacterAI randomCharacter = (CharacterAI)availableCharacters.ToArray()[rand.Next(0, availableCharacters.Count())];
+			NPCBrain randomCharacter = (NPCBrain)availableCharacters.ToArray()[rand.Next(0, availableCharacters.Count())];
 			return randomCharacter;
 		}
 		else

@@ -21,12 +21,12 @@ public class TempCharacterGenerator : MonoBehaviour
 	{
 		for (int i = 0; i < countCharacters; i++)
 		{
-			CharacterAI character = CreateCharacter(i);
+			NPCBrain character = CreateCharacter(i);
 			CharactersManager.AddCharacter(character);
 		}
 	}
 
-	CharacterAI CreateCharacter(int number)
+	NPCBrain CreateCharacter(int number)
 	{
 		GameObject go = GameObject.Instantiate<GameObject>(characterPrefab.gameObject);
 		go.transform.parent = this.transform;

@@ -2,7 +2,7 @@
 using System.Collections;
 
 [System.Serializable]
-public class CharacterPlayer : BaseCharacter 
+public class PlayerBrain : BaseBrain 
 {
 
 	public void CreateTeam()
@@ -10,7 +10,7 @@ public class CharacterPlayer : BaseCharacter
 		base.CreateTeam();
 	}
 
-	public bool RecruitToTheTeam(CharacterAI otherCharacter)
+	public bool RecruitToTheTeam(NPCBrain otherCharacter)
 	{
 		return base.RecruitToTheTeam(otherCharacter);
 	}

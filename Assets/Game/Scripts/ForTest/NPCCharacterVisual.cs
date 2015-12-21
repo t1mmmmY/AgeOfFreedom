@@ -3,10 +3,10 @@ using System.Collections;
 
 public class NPCCharacterVisual : CharacterVisual 
 {
-	[SerializeField] private CharacterAI _brain;
+	[SerializeField] private NPCBrain _brain;
 	MeshRenderer meshRenderer;
 
-	public CharacterAI brain
+	public NPCBrain brain
 	{
 		get { return _brain; }
 		private set { _brain = value; }
@@ -14,7 +14,7 @@ public class NPCCharacterVisual : CharacterVisual
 
 	void Awake()
 	{
-		brain = new CharacterAI();
+		brain = new NPCBrain();
 		brain.onChangeTeam += OnChangeTeam;
 		meshRenderer = GetComponent<MeshRenderer>();
 	}

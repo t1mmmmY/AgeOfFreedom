@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 public static class CharactersManager
 {
-	public static List<CharacterAI> allCharacters { get; private set; }
+	public static List<NPCBrain> allCharacters { get; private set; }
 
 	private static int brainTick = 500;
 	private static bool needToThink = true;
 
 	static CharactersManager()
 	{
-		allCharacters = new List<CharacterAI>();
+		allCharacters = new List<NPCBrain>();
 		Loom.RunAsync(ConsciousnessLoop);
 	}
 
-	public static void AddCharacter(CharacterAI character)
+	public static void AddCharacter(NPCBrain character)
 	{
 		allCharacters.Add(character);
 	}
@@ -34,7 +34,7 @@ public static class CharactersManager
 				int count = allCharacters.Count;
 				try
 				{
-					foreach (CharacterAI character in allCharacters)
+					foreach (NPCBrain character in allCharacters)
 					{
 						character.Think();
 						System.Threading.Thread.Sleep(brainTick / allCharacters.Count);

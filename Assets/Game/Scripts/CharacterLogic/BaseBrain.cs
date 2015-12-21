@@ -3,7 +3,7 @@ using System.Collections;
 using System.Text;
 
 //[System.Serializable]
-public class BaseCharacter 
+public class BaseBrain
 {
 	[SerializeField] protected CharacterStats _stats;
 	protected Team _team;
@@ -23,7 +23,7 @@ public class BaseCharacter
 		_team = new Team(this);
 	}
 
-	protected bool RecruitToTheTeam(CharacterAI otherCharacter)
+	protected bool RecruitToTheTeam(NPCBrain otherCharacter)
 	{
 		if (otherCharacter.WantToJoin(_team))
 		{

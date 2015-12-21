@@ -4,14 +4,14 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerCharacterVisual : CharacterVisual
 {
-	[SerializeField] private CharacterPlayer brain;
+	[SerializeField] private PlayerBrain brain;
 
 	bool showStats = false;
 	string statsLog = string.Empty;
 
 	void Awake()
 	{
-//		brain = new CharacterPlayer();
+//		brain = new PlayerBrain();
 	}
 
 	void Start()
@@ -30,7 +30,7 @@ public class PlayerCharacterVisual : CharacterVisual
 
 	void Update()
 	{
-		CharacterAI otherCharacter = Raycast();
+		NPCBrain otherCharacter = Raycast();
 		if (otherCharacter != null)
 		{
 			ShowStats(otherCharacter);
@@ -46,12 +46,12 @@ public class PlayerCharacterVisual : CharacterVisual
 		}
 	}
 
-	CharacterAI Raycast()
+	NPCBrain Raycast()
 	{
 		RaycastHit hit;
 		if (Physics.Raycast(transform.position, transform.forward, out hit, 2))
 		{
-			CharacterAI otherCharacter = hit.collider.GetComponent<NPCCharacterVisual>().brain;
+			NPCBrain otherCharacter = hit.collider.GetComponent<NPCCharacterVisual>().brain;
 			return otherCharacter;
 		}
 		else
@@ -60,7 +60,7 @@ public class PlayerCharacterVisual : CharacterVisual
 		}
 	}
 
-	void MakeAction(CharacterAI otherCharacter)
+	void MakeAction(NPCBrain otherCharacter)
 	{
 		bool success = brain.RecruitToTheTeam(otherCharacter);
 		if (!success)
@@ -69,7 +69,7 @@ public class PlayerCharacterVisual : CharacterVisual
 		}
 	}
 
-	void ShowStats(CharacterAI otherCharacter)
+	void ShowStats(NPCBrain otherCharacter)
 	{
 		statsLog = otherCharacter.ToString();
 		showStats = true;
