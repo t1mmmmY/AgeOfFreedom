@@ -21,12 +21,13 @@ public class TempCharacterGenerator : MonoBehaviour
 	{
 		for (int i = 0; i < countCharacters; i++)
 		{
-			NPCBrain character = CreateCharacter(i);
-			BrainStorage.AddCharacter(character);
+			NPCBrain npcBrain = BrainStorage.CreateBrain();
+//			CreateCharacter(i, npcBrain);
+//			BrainStorage.AddCharacter(npcBrain);
 		}
 	}
 
-	NPCBrain CreateCharacter(int number)
+	NPCCharacterVisual CreateCharacter(int number, NPCBrain brain)
 	{
 		GameObject go = GameObject.Instantiate<GameObject>(characterPrefab.gameObject);
 		go.transform.parent = this.transform;
@@ -34,9 +35,9 @@ public class TempCharacterGenerator : MonoBehaviour
 		go.name = "Sailor " + number.ToString();
 
 		NPCCharacterVisual character = go.GetComponent<NPCCharacterVisual>();
-		character.Init();
+		character.Init(brain);
 
-		return character.brain;
+		return character;
 	}
 
 	Vector3 RandomPositionInRect()

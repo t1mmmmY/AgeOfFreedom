@@ -8,9 +8,16 @@ public class BaseBrain
 	[SerializeField] protected CharacterStats _stats;
 	public Team team { get; protected set; }
 
+	public string brainID { get; private set; }
+
 	public CharacterStats stats
 	{
 		get { return _stats; }
+	}
+
+	public BaseBrain()
+	{
+		brainID = System.Guid.NewGuid().ToString();
 	}
 
 	protected virtual void CreateTeam()

@@ -4,21 +4,29 @@ using System.Collections.Generic;
 
 public static class BrainStorage
 {
-	public static List<NPCBrain> allCharacters { get; private set; }
+	public static List<NPCBrain> allBrains { get; private set; }
 
 	private static int brainTick = 1000;
 	private static bool needToThink = true;
 
 	static BrainStorage()
 	{
-		allCharacters = new List<NPCBrain>();
+		allBrains = new List<NPCBrain>();
 		Loom.RunAsync(ConsciousnessLoop);
 	}
 
-	public static void AddCharacter(NPCBrain character)
+	public static NPCBrain CreateBrain()
 	{
-		allCharacters.Add(character);
+		NPCBrain brain = new NPCBrain();
+		brain.InitRandomCharacter();
+		allBrains.Add(brain);
+		return brain;
 	}
+
+//	public static void AddCharacter(NPCBrain character)
+//	{
+//		allBrains.Add(character);
+//	}
 
 	public static void EndGame()
 	{
@@ -29,18 +37,27 @@ public static class BrainStorage
 	{
 		do
 		{
-			if (allCharacters != null && allCharacters.Count > 0)
+			if (allBrains != null && allBrains.Count > 0)
 			{
-				int count = allCharacters.Count;
+				int count = allBrains.Count;
+				if (brainTick < count)
+				{
+					brainTick = count;
+				}
 				try
 				{
-					foreach (NPCBrain character in allCharacters)
+					foreach (NPCBrain character in allBrains)
 					{
+						if (!needToThink)
+						{
+							break;
+						}
+
 						character.Think();
-						System.Threading.Thread.Sleep(brainTick / allCharacters.Count);
+						System.Threading.Thread.Sleep(brainTick / allBrains.Count);
 
 						//Need to break. Otherwise I will get exception
-						if (count != allCharacters.Count)
+						if (count != allBrains.Count)
 						{
 							break;
 						}

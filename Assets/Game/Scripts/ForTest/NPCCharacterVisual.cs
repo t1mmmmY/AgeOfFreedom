@@ -5,6 +5,7 @@ public class NPCCharacterVisual : CharacterVisual
 {
 	[SerializeField] private NPCBrain _brain;
 	MeshRenderer meshRenderer;
+	string characterID;
 
 	public NPCBrain brain
 	{
@@ -14,8 +15,6 @@ public class NPCCharacterVisual : CharacterVisual
 
 	void Awake()
 	{
-		brain = new NPCBrain();
-		brain.onChangeTeam += OnChangeTeam;
 		meshRenderer = GetComponent<MeshRenderer>();
 	}
 
@@ -24,8 +23,14 @@ public class NPCCharacterVisual : CharacterVisual
 		brain.onChangeTeam -= OnChangeTeam;
 	}
 
-	public void Init()
+	public void Init(NPCBrain npcBrain)
 	{
+		brain = npcBrain;
+		characterID = brain.brainID;
+
+		//Subscribe events here
+		brain.onChangeTeam += OnChangeTeam;
+
 		brain.InitRandomCharacter();
 	}
 

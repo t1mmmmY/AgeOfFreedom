@@ -20,6 +20,11 @@ public class NPCBrain : BaseBrain
 
 	public void Think()
 	{
+		if (!alive)
+		{
+			return;
+		}
+
 		BrainWork();
 	}
 
@@ -182,7 +187,7 @@ public class NPCBrain : BaseBrain
 	NPCBrain GetRandomCharacter()
 	{
 		var availableCharacters = 
-			from character in BrainStorage.allCharacters
+			from character in BrainStorage.allBrains
 			where !team.characters.Contains(character)
 			select character;
 									

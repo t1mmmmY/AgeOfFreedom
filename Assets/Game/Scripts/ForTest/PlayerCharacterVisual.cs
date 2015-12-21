@@ -11,7 +11,6 @@ public class PlayerCharacterVisual : CharacterVisual
 
 	void Awake()
 	{
-//		brain = new PlayerBrain();
 	}
 
 	void Start()
