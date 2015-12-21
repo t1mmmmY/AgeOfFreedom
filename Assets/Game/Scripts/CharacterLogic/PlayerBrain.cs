@@ -5,12 +5,13 @@ using System.Collections;
 public class PlayerBrain : BaseBrain 
 {
 
-	public void CreateTeam()
+	public new void CreateTeam()
 	{
 		base.CreateTeam();
 	}
 
-	public bool RecruitToTheTeam(NPCBrain otherCharacter)
+
+	public new bool RecruitToTheTeam(NPCBrain otherCharacter)
 	{
 		return base.RecruitToTheTeam(otherCharacter);
 	}

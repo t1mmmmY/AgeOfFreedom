@@ -6,28 +6,23 @@ using System.Text;
 public class BaseBrain
 {
 	[SerializeField] protected CharacterStats _stats;
-	protected Team _team;
+	public Team team { get; protected set; }
 
 	public CharacterStats stats
 	{
 		get { return _stats; }
 	}
 
-	public Team team
+	protected virtual void CreateTeam()
 	{
-		get { return _team; }
-	}
-
-	protected void CreateTeam()
-	{
-		_team = new Team(this);
+		team = new Team(this);
 	}
 
 	protected bool RecruitToTheTeam(NPCBrain otherCharacter)
 	{
-		if (otherCharacter.WantToJoin(_team))
+		if (otherCharacter.WantToJoin(team))
 		{
-			otherCharacter.Recruit(_team);
+			otherCharacter.Recruit(team);
 			return true;
 		}
 		else

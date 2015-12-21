@@ -14,7 +14,7 @@ public class TempCharacterGenerator : MonoBehaviour
 
 	void OnDestroy()
 	{
-		CharactersManager.EndGame();
+		BrainStorage.EndGame();
 	}
 
 	void CreateAllCharacters()
@@ -22,7 +22,7 @@ public class TempCharacterGenerator : MonoBehaviour
 		for (int i = 0; i < countCharacters; i++)
 		{
 			NPCBrain character = CreateCharacter(i);
-			CharactersManager.AddCharacter(character);
+			BrainStorage.AddCharacter(character);
 		}
 	}
 

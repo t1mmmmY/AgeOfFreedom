@@ -2,14 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public static class CharactersManager
+public static class BrainStorage
 {
 	public static List<NPCBrain> allCharacters { get; private set; }
 
-	private static int brainTick = 500;
+	private static int brainTick = 1000;
 	private static bool needToThink = true;
 
-	static CharactersManager()
+	static BrainStorage()
 	{
 		allCharacters = new List<NPCBrain>();
 		Loom.RunAsync(ConsciousnessLoop);

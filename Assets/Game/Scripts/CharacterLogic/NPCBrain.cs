@@ -6,7 +6,6 @@ using System.Linq;
 public class NPCBrain : BaseBrain
 {
 	bool alive = false;
-//	int brainTick = 500;
 
 	public System.Action onChangeTeam;
 
@@ -14,7 +13,7 @@ public class NPCBrain : BaseBrain
 	{
 		_stats = new CharacterStats();
 		_stats.InitRandomCharacter();
-		_team = null;
+		team = null;
 
 		alive = true;
 	}
@@ -22,24 +21,16 @@ public class NPCBrain : BaseBrain
 	public void Think()
 	{
 		BrainWork();
-//		if (!consciousness.IsAlive)
-//		{
-//			consciousness.Start();
-//		}
 	}
 
 	public void StopThink()
 	{
-//		if (consciousness.IsAlive)
-//		{
-//			consciousness.Abort();
-//		}
 	}
 
 	public bool WantToJoin(Team otherTeam)
 	{
 		//If it is a free character
-		if (_team == null)
+		if (team == null)
 		{
 			return CheckIfWantToJoin(otherTeam);
 		}
@@ -52,21 +43,17 @@ public class NPCBrain : BaseBrain
 
 	public void Recruit(Team otherTeam)
 	{
-		if (_team != null)
+		if (team != null)
 		{
-			_team.Leave(this);
+			team.Leave(this);
 		}
-		_team = otherTeam;
+		team = otherTeam;
 		otherTeam.Recruit(this);
 
-		//TO DEL
 		if (onChangeTeam != null)
 		{
 			Loom.QueueOnMainThread(onChangeTeam);
-//			onChangeTeam(team);
 		}
-
-//		SendMessage("ChangeTeam", _team, SendMessageOptions.DontRequireReceiver);
 	}
 
 	bool CheckIfWantToJoin(Team otherTeam)
@@ -84,7 +71,7 @@ public class NPCBrain : BaseBrain
 
 	bool CheckIfWantToChangeTeam(Team otherTeam)
 	{
-		if (_team.captain == this)
+		if (team.captain == this)
 		{
 			return false;
 		}
@@ -92,7 +79,7 @@ public class NPCBrain : BaseBrain
 		if (CheckIfWantToJoin(otherTeam))
 		{
 			int captainCharisma = otherTeam.captain.stats.charisma;
-			if (captainCharisma > _team.captain.stats.charisma)
+			if (captainCharisma > team.captain.stats.charisma)
 			{
 				return true;
 			}
@@ -111,39 +98,31 @@ public class NPCBrain : BaseBrain
 	void OnDestroy()
 	{
 		alive = false;
-//		StopCoroutine("BrainWork");
 	}
 
 
 	void BrainWork()
 	{
-//		do
-//		{
-//			Thread.Sleep(brainTick);
-//			yield return new WaitForSeconds(brainTick);
+		//Freelancer
+		if (team == null)
+		{
+			DoFreelancerWork();
 
-			//Freelancer
-			if (_team == null)
+		}
+		//In the team
+		else
+		{
+			//I am a captain!
+			if (team.captain == this)
 			{
-				DoFreelancerWork();
-
+				DoCaptainWork();
 			}
-			//In the team
+			//I am a sailor
 			else
 			{
-				//I am a captain!
-				if (team.captain == this)
-				{
-					DoCaptainWork();
-				}
-				//I am a sailor
-				else
-				{
-					DoSailorWork();
-				}
+				DoSailorWork();
 			}
-
-//		} while (alive);
+		}
 	}
 
 	void DoFreelancerWork()
@@ -202,10 +181,8 @@ public class NPCBrain : BaseBrain
 
 	NPCBrain GetRandomCharacter()
 	{
-		bool characterInTheTeam = false;
-
 		var availableCharacters = 
-			from character in CharactersManager.allCharacters
+			from character in BrainStorage.allCharacters
 			where !team.characters.Contains(character)
 			select character;
 									
