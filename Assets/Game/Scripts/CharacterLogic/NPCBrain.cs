@@ -2,18 +2,17 @@
 using System.Collections;
 using System.Linq;
 
-[System.Serializable]
+//[System.Serializable]
 public class NPCBrain : BaseBrain
 {
 	bool alive = false;
 
-	public System.Action onChangeTeam;
-
-	public void InitRandomCharacter()
+	public void InitRandomBrain(BaseCharacter character)
 	{
 		_stats = new CharacterStats();
 		_stats.InitRandomCharacter();
-		team = null;
+		InitCharacter(character);
+		this.character.team = null;
 
 		alive = true;
 	}
@@ -32,10 +31,10 @@ public class NPCBrain : BaseBrain
 	{
 	}
 
-	public bool WantToJoin(Team otherTeam)
+	public override bool WantToJoin(Team otherTeam)
 	{
 		//If it is a free character
-		if (team == null)
+		if (character.team == null)
 		{
 			return CheckIfWantToJoin(otherTeam);
 		}
@@ -46,14 +45,14 @@ public class NPCBrain : BaseBrain
 		}
 	}
 
-	public void Recruit(Team otherTeam)
+	public override void Recruit(Team otherTeam)
 	{
-		if (team != null)
+		if (character.team != null)
 		{
-			team.Leave(this);
+			character.team.Leave(this.character);
 		}
-		team = otherTeam;
-		otherTeam.Recruit(this);
+		character.team = otherTeam;
+		otherTeam.Recruit(this.character);
 
 		if (onChangeTeam != null)
 		{
@@ -63,7 +62,7 @@ public class NPCBrain : BaseBrain
 
 	bool CheckIfWantToJoin(Team otherTeam)
 	{
-		int captainReputation = otherTeam.captain.stats.reputation;
+		int captainReputation = otherTeam.captain.brain.stats.reputation;
 		if (captainReputation >= stats.reputation - 3 && captainReputation <= stats.reputation + 3)
 		{
 			return true;
@@ -76,15 +75,15 @@ public class NPCBrain : BaseBrain
 
 	bool CheckIfWantToChangeTeam(Team otherTeam)
 	{
-		if (team.captain == this)
+		if (character.team.captain == this.character)
 		{
 			return false;
 		}
 
 		if (CheckIfWantToJoin(otherTeam))
 		{
-			int captainCharisma = otherTeam.captain.stats.charisma;
-			if (captainCharisma > team.captain.stats.charisma)
+			int captainCharisma = otherTeam.captain.brain.stats.charisma;
+			if (captainCharisma > character.team.captain.brain.stats.charisma)
 			{
 				return true;
 			}
@@ -109,7 +108,7 @@ public class NPCBrain : BaseBrain
 	void BrainWork()
 	{
 		//Freelancer
-		if (team == null)
+		if (character.team == null)
 		{
 			DoFreelancerWork();
 
@@ -118,7 +117,7 @@ public class NPCBrain : BaseBrain
 		else
 		{
 			//I am a captain!
-			if (team.captain == this)
+			if (character.team.captain == this.character)
 			{
 				DoCaptainWork();
 			}
@@ -177,24 +176,24 @@ public class NPCBrain : BaseBrain
 
 	void RecruitTheTeam()
 	{
-		NPCBrain someCharacter = GetRandomCharacter();
+		BaseCharacter someCharacter = GetRandomCharacter();
 		if (RecruitToTheTeam(someCharacter))
 		{
 //			Debug.Log(someCharacter.name + " has joined team " + name);
 		}
 	}
 
-	NPCBrain GetRandomCharacter()
+	BaseCharacter GetRandomCharacter()
 	{
 		var availableCharacters = 
-			from character in BrainStorage.allBrains
-			where !team.characters.Contains(character)
-			select character;
+			from someCharacter in CharactersManager.allCharacters
+				where (someCharacter.team == null || !someCharacter.team.characters.Contains(character))
+			select someCharacter;
 									
 		if (availableCharacters.Count() > 0)
 		{
 			System.Random rand = new System.Random();
-			NPCBrain randomCharacter = (NPCBrain)availableCharacters.ToArray()[rand.Next(0, availableCharacters.Count())];
+			BaseCharacter randomCharacter = (BaseCharacter)availableCharacters.ToArray()[rand.Next(0, availableCharacters.Count())];
 			return randomCharacter;
 		}
 		else

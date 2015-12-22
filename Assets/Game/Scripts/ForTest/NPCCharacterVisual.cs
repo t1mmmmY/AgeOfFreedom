@@ -3,14 +3,14 @@ using System.Collections;
 
 public class NPCCharacterVisual : CharacterVisual 
 {
-	[SerializeField] private NPCBrain _brain;
+	private BaseCharacter _character;
 	MeshRenderer meshRenderer;
-	string characterID;
+	string characterVisualID;
 
-	public NPCBrain brain
+	public BaseCharacter character
 	{
-		get { return _brain; }
-		private set { _brain = value; }
+		get { return _character; }
+		private set { _character = value; }
 	}
 
 	void Awake()
@@ -20,22 +20,20 @@ public class NPCCharacterVisual : CharacterVisual
 
 	void OnDestroy()
 	{
-		brain.onChangeTeam -= OnChangeTeam;
+		character.brain.onChangeTeam -= OnChangeTeam;
 	}
 
-	public void Init(NPCBrain npcBrain)
+	public void Init(BaseCharacter npcCharacter)
 	{
-		brain = npcBrain;
-		characterID = brain.brainID;
+		character = npcCharacter;
+		characterVisualID = character.characterID;
 
 		//Subscribe events here
-		brain.onChangeTeam += OnChangeTeam;
-
-		brain.InitRandomCharacter();
+		character.brain.onChangeTeam += OnChangeTeam;
 	}
 
 	public void OnChangeTeam()
 	{
-		meshRenderer.material.color = brain.team.teamColor;
+		meshRenderer.material.color = character.team.teamColor;
 	}
 }

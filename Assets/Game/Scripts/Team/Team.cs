@@ -5,26 +5,27 @@ using System.Collections.Generic;
 [System.Serializable]
 public class Team
 {
-	[SerializeField] BaseBrain _captain;
+	BaseCharacter _captain;
 	[SerializeField] int countSailors = 0;
-	[SerializeField] List<BaseBrain> _characters;
+	List<BaseCharacter> _characters;
+
 
 	//TO DEL
 	[SerializeField] public Color teamColor;
 
-	public BaseBrain captain
+	public BaseCharacter captain
 	{
 		get { return _captain; }
 	}
 
-	public List<BaseBrain> characters
+	public List<BaseCharacter> characters
 	{
 		get { return _characters; }
 	}
 
-	public Team(BaseBrain teamCaptain)
+	public Team(BaseCharacter teamCaptain)
 	{
-		_characters = new List<BaseBrain>();
+		_characters = new List<BaseCharacter>();
 		_captain = teamCaptain;
 		AddCharacter(_captain);
 
@@ -36,24 +37,24 @@ public class Team
 		teamColor = new Color((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
 	}
 
-	public void Recruit(NPCBrain character)
+	public void Recruit(BaseCharacter character)
 	{
 		AddCharacter(character);
 	}
 
-	public void Leave(NPCBrain character)
+	public void Leave(BaseCharacter character)
 	{
 		RemoveCharacter(character);
 	}
 
 
-	void AddCharacter(BaseBrain character)
+	void AddCharacter(BaseCharacter character)
 	{
 		_characters.Add(character);
 		countSailors++;
 	}
 
-	void RemoveCharacter(BaseBrain character)
+	void RemoveCharacter(BaseCharacter character)
 	{
 		if (_characters.Contains(character))
 		{

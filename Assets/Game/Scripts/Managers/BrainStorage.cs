@@ -15,10 +15,10 @@ public static class BrainStorage
 		Loom.RunAsync(ConsciousnessLoop);
 	}
 
-	public static NPCBrain CreateBrain()
+	public static NPCBrain CreateBrain(BaseCharacter character)
 	{
 		NPCBrain brain = new NPCBrain();
-		brain.InitRandomCharacter();
+		brain.InitRandomBrain(character);
 		allBrains.Add(brain);
 		return brain;
 	}

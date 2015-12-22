@@ -5,7 +5,7 @@ public class TempCharacterGenerator : MonoBehaviour
 {
 	[SerializeField] Rect mapRect;
 	[SerializeField] int countCharacters = 50;
-	[SerializeField] NPCCharacterVisual characterPrefab;
+	public NPCCharacterVisual characterPrefab;
 
 	void Start()
 	{
@@ -21,23 +21,22 @@ public class TempCharacterGenerator : MonoBehaviour
 	{
 		for (int i = 0; i < countCharacters; i++)
 		{
-			NPCBrain npcBrain = BrainStorage.CreateBrain();
-//			CreateCharacter(i, npcBrain);
-//			BrainStorage.AddCharacter(npcBrain);
+			BaseCharacter npcCharacter = CharactersManager.CreateCharacter();
+			CreateCharacter(i, npcCharacter);
 		}
 	}
 
-	NPCCharacterVisual CreateCharacter(int number, NPCBrain brain)
+	NPCCharacterVisual CreateCharacter(int number, BaseCharacter character)
 	{
 		GameObject go = GameObject.Instantiate<GameObject>(characterPrefab.gameObject);
 		go.transform.parent = this.transform;
 		go.transform.position = RandomPositionInRect();
 		go.name = "Sailor " + number.ToString();
 
-		NPCCharacterVisual character = go.GetComponent<NPCCharacterVisual>();
-		character.Init(brain);
+		NPCCharacterVisual characterVisual = go.GetComponent<NPCCharacterVisual>();
+		characterVisual.Init(character);
 
-		return character;
+		return characterVisual;
 	}
 
 	Vector3 RandomPositionInRect()

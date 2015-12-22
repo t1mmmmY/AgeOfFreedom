@@ -5,10 +5,14 @@ using System.Text;
 //[System.Serializable]
 public class BaseBrain
 {
-	[SerializeField] protected CharacterStats _stats;
-	public Team team { get; protected set; }
+	protected CharacterStats _stats;
+
+	public BaseCharacter character { get; protected set; }
 
 	public string brainID { get; private set; }
+
+	public System.Action onChangeTeam;
+
 
 	public CharacterStats stats
 	{
@@ -20,16 +24,22 @@ public class BaseBrain
 		brainID = System.Guid.NewGuid().ToString();
 	}
 
-	protected virtual void CreateTeam()
+	public void InitCharacter(BaseCharacter character)
 	{
-		team = new Team(this);
+		this.character = character;
+		this.character.InitBrain(this);
 	}
 
-	protected bool RecruitToTheTeam(NPCBrain otherCharacter)
+	public virtual void CreateTeam()
 	{
-		if (otherCharacter.WantToJoin(team))
+		character.team = new Team(character);
+	}
+
+	public bool RecruitToTheTeam(BaseCharacter otherCharacter)
+	{
+		if (otherCharacter.brain.WantToJoin(character.team))
 		{
-			otherCharacter.Recruit(team);
+			otherCharacter.brain.Recruit(character.team);
 			return true;
 		}
 		else
@@ -38,18 +48,27 @@ public class BaseBrain
 		}
 	}
 
+	public virtual bool WantToJoin(Team otherTeam)
+	{
+		return false;
+	}
+
+	public virtual void Recruit(Team otherTeam)
+	{
+	}
+
 	public override string ToString()
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.Append(stats.ToString());
 
-		if (team != null)
+		if (character.team != null)
 		{
 			sb.AppendLine();
-			if (team.captain != this)
+			if (character.team.captain != this.character)
 			{
 				sb.AppendLine("Captain");
-				sb.Append(team.captain.stats.ToString());
+				sb.Append(character.team.captain.brain.stats.ToString());
 			}
 			else
 			{
@@ -59,4 +78,6 @@ public class BaseBrain
 
 		return sb.ToString();
 	}
+
+
 }
