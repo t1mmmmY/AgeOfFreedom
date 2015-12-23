@@ -6,6 +6,7 @@ using System.Collections;
 public class BaseCharacter 
 {
 	BaseBrain _brain;
+	public string name { get; private set; }
 
 	public BaseBrain brain
 	{
@@ -13,26 +14,52 @@ public class BaseCharacter
 		private set { _brain = value; }
 	}
 
-//	public BaseBrain brain { get; private set; }
 	public string characterID { get; private set; }
 
 	public Team team { get; set; }
+	public Location location { get; private set; }
 
+	public BaseCharacter()
+	{
+		name = "Sailor " + System.DateTime.UtcNow.Millisecond.ToString();
+		location = new Location();
+	}
 
 	public void InitBrain(BaseBrain brain)
 	{
 		this.brain = brain;
 		this.characterID = brain.brainID;
-//		this.brain.InitCharacter(this);
 	}
 
-	public static bool operator ==(BaseCharacter character1, BaseCharacter character2)
+	public void EnterTheTavern(Tavern tavern)
 	{
-		return character1.characterID == character2.characterID;
+		location.EnterTheTavern(tavern);
 	}
 
-	public static bool operator !=(BaseCharacter character1, BaseCharacter character2)
+	public void LeaveTheTavern()
 	{
-		return !(character1 == character2);
+		location.LeaveTheTavern();
 	}
+
+
+//	public static bool operator ==(BaseCharacter character1, BaseCharacter character2)
+//	{
+//		if (character1 == null && character2 == null)
+//		{
+//			return true;
+//		}
+//		else if (character1 == null || character2 == null)
+//		{
+//			return false;
+//		}
+//		else
+//		{
+//			return character1.characterID == character2.characterID;
+//		}
+//	}
+//
+//	public static bool operator !=(BaseCharacter character1, BaseCharacter character2)
+//	{
+//		return !(character1 == character2);
+//	}
 }

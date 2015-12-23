@@ -6,7 +6,8 @@ public static class BrainStorage
 {
 	public static List<NPCBrain> allBrains { get; private set; }
 
-	private static int brainTick = 1000;
+	private static int brainTick = 1;
+//	private static int brainTick = 1000;
 	private static bool needToThink = true;
 
 	static BrainStorage()
@@ -23,14 +24,15 @@ public static class BrainStorage
 		return brain;
 	}
 
-//	public static void AddCharacter(NPCBrain character)
-//	{
-//		allBrains.Add(character);
-//	}
 
 	public static void EndGame()
 	{
 		needToThink = false;
+
+		foreach (NPCBrain brain in allBrains)
+		{
+			brain.StopThink();
+		}
 	}
 
 	private static void ConsciousnessLoop()
@@ -46,14 +48,14 @@ public static class BrainStorage
 				}
 				try
 				{
-					foreach (NPCBrain character in allBrains)
+					foreach (NPCBrain brain in allBrains)
 					{
 						if (!needToThink)
 						{
 							break;
 						}
 
-						character.Think();
+						brain.Think();
 						System.Threading.Thread.Sleep(brainTick / allBrains.Count);
 
 						//Need to break. Otherwise I will get exception

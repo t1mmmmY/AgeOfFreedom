@@ -33,6 +33,11 @@ public class BaseBrain
 	public virtual void CreateTeam()
 	{
 		character.team = new Team(character);
+
+		if (onChangeTeam != null)
+		{
+			Loom.QueueOnMainThread(onChangeTeam);
+		}
 	}
 
 	public bool RecruitToTheTeam(BaseCharacter otherCharacter)
@@ -55,6 +60,10 @@ public class BaseBrain
 
 	public virtual void Recruit(Team otherTeam)
 	{
+		if (onChangeTeam != null)
+		{
+			Loom.QueueOnMainThread(onChangeTeam);
+		}
 	}
 
 	public override string ToString()

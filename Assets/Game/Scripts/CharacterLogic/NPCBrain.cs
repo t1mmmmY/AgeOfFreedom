@@ -29,6 +29,7 @@ public class NPCBrain : BaseBrain
 
 	public void StopThink()
 	{
+		alive = false;
 	}
 
 	public override bool WantToJoin(Team otherTeam)
@@ -54,10 +55,7 @@ public class NPCBrain : BaseBrain
 		character.team = otherTeam;
 		otherTeam.Recruit(this.character);
 
-		if (onChangeTeam != null)
-		{
-			Loom.QueueOnMainThread(onChangeTeam);
-		}
+		base.Recruit(otherTeam);
 	}
 
 	bool CheckIfWantToJoin(Team otherTeam)
@@ -96,12 +94,6 @@ public class NPCBrain : BaseBrain
 		{
 			return false;
 		}
-	}
-
-
-	void OnDestroy()
-	{
-		alive = false;
 	}
 
 
@@ -148,7 +140,10 @@ public class NPCBrain : BaseBrain
 
 	void DoCaptainWork()
 	{
-		Loom.QueueOnMainThread(RecruitTheTeam);
+		if (character.location.inTavern)
+		{
+			Loom.QueueOnMainThread(RecruitTheTeam);
+		}
 //		RecruitTheTeam();
 	}
 
@@ -177,16 +172,23 @@ public class NPCBrain : BaseBrain
 	void RecruitTheTeam()
 	{
 		BaseCharacter someCharacter = GetRandomCharacter();
-		if (RecruitToTheTeam(someCharacter))
+		if (someCharacter != null)
 		{
-//			Debug.Log(someCharacter.name + " has joined team " + name);
+			if (RecruitToTheTeam(someCharacter))
+			{
+	//			Debug.Log(someCharacter.name + " has joined team " + name);
+			}
+		}
+		else
+		{
+			//Nobody to recruit
 		}
 	}
 
 	BaseCharacter GetRandomCharacter()
 	{
 		var availableCharacters = 
-			from someCharacter in CharactersManager.allCharacters
+			from someCharacter in character.location.GetTavern().GetAllCharacters()
 				where (someCharacter.team == null || !someCharacter.team.characters.Contains(character))
 			select someCharacter;
 									
