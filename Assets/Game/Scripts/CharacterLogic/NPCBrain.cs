@@ -3,18 +3,20 @@ using System.Collections;
 using System.Linq;
 
 //[System.Serializable]
-public class NPCBrain : BaseBrain
+public partial class NPCBrain : BaseBrain
 {
 	bool alive = false;
 
+
 	public void InitRandomBrain(BaseCharacter character)
 	{
-		_stats = new CharacterStats();
-		_stats.InitRandomCharacter();
+		stats = new CharacterStats();
+		stats.InitRandomCharacter();
 		InitCharacter(character);
 		this.character.team = null;
 
 		alive = true;
+		failedRecruiting = 0;
 	}
 
 	public void Think()
@@ -121,71 +123,18 @@ public class NPCBrain : BaseBrain
 		}
 	}
 
-	void DoFreelancerWork()
-	{
-		if (DoIWantToCreateMyOwnTeam())
-		{
-//			Debug.Log("I decided to create my own team! " + name);
-			CreateTeam();
-		}
-		else
-		{
-			DoNothing();
-		}
-	}
 
 	void DoNothing()
 	{
 	}
 
-	void DoCaptainWork()
-	{
-		if (character.location.inTavern)
-		{
-			Loom.QueueOnMainThread(RecruitTheTeam);
-		}
-//		RecruitTheTeam();
-	}
 
 	void DoSailorWork()
 	{
 	}
 
 
-
-	bool DoIWantToCreateMyOwnTeam()
-	{
-		System.Random rand = new System.Random();
-
-		float randomValue = (float)((rand.NextDouble() / 2f + 0.5f) * (rand.NextDouble() * 100 + 1) * 10);
-
-		if (randomValue < stats.charisma)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	void RecruitTheTeam()
-	{
-		BaseCharacter someCharacter = GetRandomCharacter();
-		if (someCharacter != null)
-		{
-			if (RecruitToTheTeam(someCharacter))
-			{
-	//			Debug.Log(someCharacter.name + " has joined team " + name);
-			}
-		}
-		else
-		{
-			//Nobody to recruit
-		}
-	}
-
-	BaseCharacter GetRandomCharacter()
+	BaseCharacter GetRandomCharacterInTavern()
 	{
 		var availableCharacters = 
 			from someCharacter in character.location.GetTavern().GetAllCharacters()

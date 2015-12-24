@@ -5,7 +5,7 @@ using System.Text;
 //[System.Serializable]
 public class BaseBrain
 {
-	protected CharacterStats _stats;
+	public CharacterStats stats { get; protected set; }
 
 	public BaseCharacter character { get; protected set; }
 
@@ -13,11 +13,6 @@ public class BaseBrain
 
 	public System.Action onChangeTeam;
 
-
-	public CharacterStats stats
-	{
-		get { return _stats; }
-	}
 
 	public BaseBrain()
 	{

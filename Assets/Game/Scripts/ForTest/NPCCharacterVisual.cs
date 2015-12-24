@@ -3,15 +3,10 @@ using System.Collections;
 
 public class NPCCharacterVisual : CharacterVisual 
 {
-	private BaseCharacter _character;
+	public BaseCharacter character { get; private set; }
 	MeshRenderer meshRenderer;
 	string characterVisualID;
 
-	public BaseCharacter character
-	{
-		get { return _character; }
-		private set { _character = value; }
-	}
 
 	void Awake()
 	{

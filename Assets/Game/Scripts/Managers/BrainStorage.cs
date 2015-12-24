@@ -7,8 +7,8 @@ public static class BrainStorage
 	public static List<NPCBrain> allBrains { get; private set; }
 
 	private static int brainTick = 1;
-//	private static int brainTick = 1000;
 	private static bool needToThink = true;
+	private static bool speedUp = true;
 
 	static BrainStorage()
 	{
@@ -56,13 +56,21 @@ public static class BrainStorage
 						}
 
 						brain.Think();
-						System.Threading.Thread.Sleep(brainTick / allBrains.Count);
+						if (!speedUp)
+						{
+							System.Threading.Thread.Sleep(brainTick / allBrains.Count);
+						}
 
 						//Need to break. Otherwise I will get exception
 						if (count != allBrains.Count)
 						{
 							break;
 						}
+					}
+
+					if (speedUp)
+					{
+						System.Threading.Thread.Sleep(50);
 					}
 				}
 				catch (System.Exception ex)

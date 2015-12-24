@@ -5,29 +5,21 @@ using System.Collections.Generic;
 [System.Serializable]
 public class Team
 {
-	BaseCharacter _captain;
+	public BaseCharacter captain { get; private set; }
 	[SerializeField] int countSailors = 0;
-	List<BaseCharacter> _characters;
+	public List<BaseCharacter> characters { get; private set; }
+	public BaseShip ship { get; private set; }
 
 
 	//TO DEL
 	[SerializeField] public Color teamColor;
 
-	public BaseCharacter captain
-	{
-		get { return _captain; }
-	}
-
-	public List<BaseCharacter> characters
-	{
-		get { return _characters; }
-	}
 
 	public Team(BaseCharacter teamCaptain)
 	{
-		_characters = new List<BaseCharacter>();
-		_captain = teamCaptain;
-		AddCharacter(_captain);
+		characters = new List<BaseCharacter>();
+		captain = teamCaptain;
+		AddCharacter(captain);
 
 		TeamsManager.Instance.AddTeam(this);
 
@@ -47,21 +39,27 @@ public class Team
 		RemoveCharacter(character);
 	}
 
+	public bool SetShip(BaseShip ship)
+	{
+		//Set ship if this possible
+		this.ship = ship;
+		return true;
+	}
+
 
 	void AddCharacter(BaseCharacter character)
 	{
-		_characters.Add(character);
+		characters.Add(character);
 		countSailors++;
 	}
 
 	void RemoveCharacter(BaseCharacter character)
 	{
-		if (_characters.Contains(character))
+		if (characters.Contains(character))
 		{
-			_characters.Remove(character);
+			characters.Remove(character);
 			countSailors--;
 		}
 	}
-
 
 }

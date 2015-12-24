@@ -5,19 +5,19 @@ using System.Collections;
 //[System.Serializable]
 public class BaseCharacter 
 {
-	BaseBrain _brain;
+	public BaseBrain brain { get; private set; }
 	public string name { get; private set; }
 
-	public BaseBrain brain
-	{
-		get { return _brain; }
-		private set { _brain = value; }
-	}
 
 	public string characterID { get; private set; }
 
 	public Team team { get; set; }
 	public Location location { get; private set; }
+
+
+	//Items
+	public int money { get; private set; }
+
 
 	public BaseCharacter()
 	{
@@ -31,6 +31,16 @@ public class BaseCharacter
 		this.characterID = brain.brainID;
 	}
 
+	public void EnterTheCity(City city)
+	{
+		location.EnterTheCity(city);
+	}
+
+	public void LeaveTheCity()
+	{
+		location.LeaveTheCity();
+	}
+
 	public void EnterTheTavern(Tavern tavern)
 	{
 		location.EnterTheTavern(tavern);
@@ -39,6 +49,14 @@ public class BaseCharacter
 	public void LeaveTheTavern()
 	{
 		location.LeaveTheTavern();
+	}
+
+
+	public bool BuyShip(BaseShip ship)
+	{
+		//Buy ship if enough money
+		team.SetShip(ship);
+		return true;
 	}
 
 

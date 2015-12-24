@@ -6,66 +6,22 @@ using System.Text;
 public class CharacterStats 
 {
 	//Mental parameters
-	[SerializeField] int _charisma;
-	[SerializeField] int _reputation;
-	[SerializeField] int _discipline;
-	[SerializeField] int _loyalty;
-	[SerializeField] int _fear;
+	public int charisma { get; private set; }
+	public int reputation { get; private set; }
+	public int discipline { get; private set; }
+	public int loyalty { get; private set; }
+	public int fear { get; private set; }
+	public int permanence { get; private set; }
 
 	//Skills
-	[SerializeField] int _fencing;
-	[SerializeField] int _pistol;
-	[SerializeField] int _sailing;
-	[SerializeField] int _artillery;
+	public int fencing { get; private set; }
+	public int pistol { get; private set; }
+	public int sailing { get; private set; }
+	public int artillery { get; private set; }
 
 	//Items
-	[SerializeField] int money;
 	//etc...
 
-	public int charisma
-	{
-		get { return _charisma; }
-	}
-
-	public int reputation
-	{
-		get { return _reputation; }
-	}
-
-	public int discipline
-	{
-		get { return _discipline; }
-	}
-
-	public int loyalty
-	{
-		get { return _loyalty; }
-	}
-
-	public int fear
-	{
-		get { return _fear; }
-	}
-
-	public int fencing
-	{
-		get { return _fencing; }
-	}
-
-	public int pistol
-	{
-		get { return _pistol; }
-	}
-
-	public int sailing
-	{
-		get { return _sailing; }
-	}
-
-	public int artillery
-	{
-		get { return _artillery; }
-	}
 
 	public CharacterStats()
 	{
@@ -74,15 +30,16 @@ public class CharacterStats
 	public void InitRandomCharacter()
 	{
 		System.Random rand = new System.Random();
-		_charisma = rand.Next(1, 11);
-		_reputation = rand.Next(-5, 6);
-		_discipline = rand.Next(1, 11);
-		_loyalty = rand.Next(1, 11);
-		_fear = rand.Next(1, 5);
-		_fencing = rand.Next(1, 11);
-		_pistol = rand.Next(1, 11);
-		_sailing = rand.Next(1, 11);
-		_artillery = rand.Next(1, 11);
+		charisma = rand.Next(1, 11);
+		reputation = rand.Next(-5, 6);
+		discipline = rand.Next(1, 11);
+		loyalty = rand.Next(1, 11);
+		fear = rand.Next(1, 5);
+		permanence = rand.Next(1, 11);
+		fencing = rand.Next(1, 11);
+		pistol = rand.Next(1, 11);
+		sailing = rand.Next(1, 11);
+		artillery = rand.Next(1, 11);
 	}
 
 	public override string ToString()
@@ -93,6 +50,7 @@ public class CharacterStats
 		sb.AppendLine(string.Format("discipline {0}", discipline));
 		sb.AppendLine(string.Format("loyalty {0}", loyalty));
 		sb.AppendLine(string.Format("fear {0}", fear));
+		sb.AppendLine(string.Format("permanence {0}", permanence));
 		sb.AppendLine(string.Format("fencing {0}", fencing));
 		sb.AppendLine(string.Format("pistol {0}", pistol));
 		sb.AppendLine(string.Format("sailing {0}", sailing));
