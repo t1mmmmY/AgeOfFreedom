@@ -14,6 +14,7 @@ public static class CharactersManager
 	public static BaseCharacter CreateCharacter()
 	{
 		BaseCharacter character = new BaseCharacter();
+		character.Init();
 		NPCBrain brain = BrainStorage.CreateBrain(character);
 		allCharacters.Add(character);
 		return character;

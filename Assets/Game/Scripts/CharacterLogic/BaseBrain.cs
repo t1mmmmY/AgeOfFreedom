@@ -3,20 +3,25 @@ using System.Collections;
 using System.Text;
 
 //[System.Serializable]
-public class BaseBrain
+public class BaseBrain : Logic
 {
 	public CharacterStats stats { get; protected set; }
 
 	public BaseCharacter character { get; protected set; }
 
-	public string brainID { get; private set; }
+//	public string brainID { get; private set; }
 
 	public System.Action onChangeTeam;
 
 
 	public BaseBrain()
 	{
-		brainID = System.Guid.NewGuid().ToString();
+//		brainID = System.Guid.NewGuid().ToString();
+	}
+
+	public override void Init()
+	{
+		base.Init();
 	}
 
 	public void InitCharacter(BaseCharacter character)
@@ -27,6 +32,7 @@ public class BaseBrain
 
 	public virtual void CreateTeam()
 	{
+//		Debug.Log("CreateTeam");
 		character.team = new Team(character);
 
 		if (onChangeTeam != null)

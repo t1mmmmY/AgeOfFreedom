@@ -1,25 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BaseShip 
+public class BaseShip : Logic
 {
 	public ShipStats stats { get; private set; }
 	public Team team { get; private set; }
 	public Location location { get; private set; }
 
 
-	public BaseShip()
+	public override void Init()
 	{
+		base.Init();
+
 		stats = new ShipStats();
 	}
 
-	public BaseShip(ShipStats stats)
+	public void Init(ShipStats stats)
 	{
+		base.Init();
+
 		this.stats = new ShipStats(stats);
 	}
 
-
-	public void InitWithTeam(Team team)
+	public void ChangeTeamTeam(Team team)
 	{
 		this.team = team;
 	}

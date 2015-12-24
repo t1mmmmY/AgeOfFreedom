@@ -7,6 +7,10 @@ public partial class NPCBrain : BaseBrain
 {
 	bool alive = false;
 
+	public override void Init()
+	{
+		base.Init();
+	}
 
 	public void InitRandomBrain(BaseCharacter character)
 	{
@@ -105,7 +109,6 @@ public partial class NPCBrain : BaseBrain
 		if (character.team == null)
 		{
 			DoFreelancerWork();
-
 		}
 		//In the team
 		else

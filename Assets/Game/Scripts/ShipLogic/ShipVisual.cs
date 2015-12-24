@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//TODO
-public class ShipVisual : MonoBehaviour 
+public class ShipVisual : Visualisation 
 {
 
+	public override void Init(Logic logic)
+	{
+		base.Init(logic);
+	}
 }

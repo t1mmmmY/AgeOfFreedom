@@ -8,7 +8,7 @@ public static class BrainStorage
 
 	private static int brainTick = 1;
 	private static bool needToThink = true;
-	private static bool speedUp = true;
+	private static bool speedUp = false;
 
 	static BrainStorage()
 	{
@@ -19,6 +19,7 @@ public static class BrainStorage
 	public static NPCBrain CreateBrain(BaseCharacter character)
 	{
 		NPCBrain brain = new NPCBrain();
+		brain.Init();
 		brain.InitRandomBrain(character);
 		allBrains.Add(brain);
 		return brain;
@@ -70,7 +71,7 @@ public static class BrainStorage
 
 					if (speedUp)
 					{
-						System.Threading.Thread.Sleep(50);
+						System.Threading.Thread.Sleep(100);
 					}
 				}
 				catch (System.Exception ex)

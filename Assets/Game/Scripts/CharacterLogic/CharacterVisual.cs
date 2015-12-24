@@ -1,25 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterVisual : MonoBehaviour 
+public class CharacterVisual : Visualisation 
 {
-	public BaseCharacter character { get; private set; }
-	string characterVisualID;
+	protected BaseCharacter character;
 
+	public override void Init(Logic characterLogic)
+	{
+		base.Init(characterLogic);
+
+		if (this.logic is BaseCharacter)
+		{
+			character = (BaseCharacter)this.logic;
+
+			//Subscribe events here
+			character.onChangeTeam += OnChangeTeam;
+		}
+
+
+	}
 
 	void OnDestroy()
 	{
-		character.brain.onChangeTeam -= OnChangeTeam;
+		character.onChangeTeam -= OnChangeTeam;
 	}
 
-	public virtual void Init(BaseCharacter character)
-	{
-		this.character = character;
-		characterVisualID = this.character.characterID;
-
-		//Subscribe events here
-		this.character.brain.onChangeTeam += OnChangeTeam;
-	}
+//	public virtual void Init(BaseCharacter character)
+//	{
+//		this.character = character;
+//		characterVisualID = this.character.characterID;
+//
+//		//Subscribe events here
+//		this.character.brain.onChangeTeam += OnChangeTeam;
+//	}
 
 	public virtual void OnChangeTeam()
 	{

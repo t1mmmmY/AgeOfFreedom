@@ -11,10 +11,11 @@ public class NPCCharacterVisual : CharacterVisual
 		meshRenderer = GetComponent<MeshRenderer>();
 	}
 
-	public override void Init(BaseCharacter character)
+	public override void Init(Logic characterLogic)
 	{
-		base.Init(character);
+		base.Init(characterLogic);
 	}
+
 
 	public override void OnChangeTeam()
 	{
