@@ -20,7 +20,8 @@ public class BaseCharacter : Logic
 
 
 	//Events
-	public System.Action onChangeTeam;
+	public System.Action<BaseCharacter, Team> onChangeTeam;
+	public System.Action<BaseCharacter, BaseShip> onBuyShip;
 
 
 	public BaseCharacter()
@@ -63,19 +64,40 @@ public class BaseCharacter : Logic
 		location.LeaveTheTavern();
 	}
 
+
+	BaseShip tempShip;
+
 	public bool BuyShip(BaseShip ship)
 	{
 		//Buy ship if enough money
 		team.SetShip(ship);
+
+		tempShip = ship;
+		Loom.QueueOnMainThread(OnBuyShipEvent);
+
 		return true;
+	}
+
+	private void OnBuyShipEvent()
+	{
+		if (onBuyShip != null)
+		{
+			onBuyShip(this, tempShip);
+		}
+		tempShip = null;
 	}
 
 
 	private void OnChangeTeam()
 	{
+		Loom.QueueOnMainThread(OnChangeTeamEvent);
+	}
+
+	private void OnChangeTeamEvent()
+	{
 		if (onChangeTeam != null)
 		{
-			onChangeTeam();
+			onChangeTeam(this, team);
 		}
 	}
 

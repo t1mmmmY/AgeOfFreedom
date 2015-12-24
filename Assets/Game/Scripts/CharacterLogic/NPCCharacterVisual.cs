@@ -17,10 +17,10 @@ public class NPCCharacterVisual : CharacterVisual
 	}
 
 
-	public override void OnChangeTeam()
+	public override void OnChangeTeam(BaseCharacter character, Team team)
 	{
-		meshRenderer.material.color = character.team.teamColor;
+		meshRenderer.material.color = team.teamColor;
 
-		base.OnChangeTeam();
+		base.OnChangeTeam(character, team);
 	}
 }

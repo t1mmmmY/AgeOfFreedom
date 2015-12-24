@@ -34,7 +34,7 @@ public class CharacterVisual : Visualisation
 //		this.character.brain.onChangeTeam += OnChangeTeam;
 //	}
 
-	public virtual void OnChangeTeam()
+	public virtual void OnChangeTeam(BaseCharacter character, Team team)
 	{
 	}
 }

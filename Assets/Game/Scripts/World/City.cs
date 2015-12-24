@@ -43,4 +43,16 @@ public class City
 
 		return npcCharacter;
 	}
+
+	public Rect GetRect()
+	{
+		if (cityOnMap != null)
+		{
+			return cityOnMap.GetRect();
+		}
+		else 
+		{
+			return new Rect();
+		}
+	}
 }

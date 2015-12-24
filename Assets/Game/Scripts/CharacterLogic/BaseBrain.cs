@@ -37,7 +37,8 @@ public class BaseBrain : Logic
 
 		if (onChangeTeam != null)
 		{
-			Loom.QueueOnMainThread(onChangeTeam);
+			onChangeTeam();
+//			Loom.QueueOnMainThread(onChangeTeam);
 		}
 	}
 
@@ -63,7 +64,8 @@ public class BaseBrain : Logic
 	{
 		if (onChangeTeam != null)
 		{
-			Loom.QueueOnMainThread(onChangeTeam);
+			onChangeTeam();
+//			Loom.QueueOnMainThread(onChangeTeam);
 		}
 	}
 

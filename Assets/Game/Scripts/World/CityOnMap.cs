@@ -8,7 +8,6 @@ public class CityOnMap : MonoBehaviour
 
 
 	City cityLogic;
-	[SerializeField] NPCCharacterVisual characterPrefab;
 
 
 	void Start()
@@ -18,21 +17,16 @@ public class CityOnMap : MonoBehaviour
 
 	public NPCCharacterVisual PlaceOnMap(BaseCharacter character)
 	{
-		GameObject go = GameObject.Instantiate<GameObject>(characterPrefab.gameObject);
-		go.transform.parent = this.transform;
-		go.transform.position = RandomPositionInRect();
-		go.name = character.name;
-
-		NPCCharacterVisual characterVisual = go.GetComponent<NPCCharacterVisual>();
-		characterVisual.Init(character);
+		Rect rect = GetRect();
+		NPCCharacterVisual characterVisual = CharactersVisualizationManager.Instance.CreateCharacter(character, rect);
 
 		return characterVisual;
 	}
 
-	Vector3 RandomPositionInRect()
+	public Rect GetRect()
 	{
-		return new Vector3(Random.Range(transform.position.x - transform.localScale.x / 2, transform.position.x + transform.localScale.x / 2),
-			1,
-			Random.Range(transform.position.z - transform.localScale.z / 2, transform.position.z + transform.localScale.z / 2));
+		return new Rect(transform.position.x - transform.localScale.x / 2, transform.position.z - transform.localScale.z / 2,
+			transform.localScale.x, transform.localScale.z);
 	}
+
 }
