@@ -38,7 +38,10 @@ public class City
 
 		if (cityOnMap != null)
 		{
-			cityOnMap.PlaceOnMap(npcCharacter);
+			if (TestGameController.Instance.showCharacters)
+			{
+				cityOnMap.PlaceOnMap(npcCharacter);
+			}
 		}
 
 		return npcCharacter;
