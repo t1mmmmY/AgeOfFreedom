@@ -46,6 +46,9 @@ public class Team
 		return true;
 	}
 
+	public void OnTheBoad()
+	{
+	}
 
 	void AddCharacter(BaseCharacter character)
 	{

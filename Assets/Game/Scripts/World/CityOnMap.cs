@@ -1,21 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CityOnMap : MonoBehaviour 
+public class CityOnMap : Visualisation 
 {
 	[Range(0, 10000)]
-	[SerializeField] private int citizensCount = 2000;
+//	[SerializeField] private int citizensCount = 2000;
 
 
 	City cityLogic;
 
+	public override void Init(Logic logic)
+	{
+		cityLogic = (City)logic;
+
+		base.Init(logic);
+	}
 
 	void Start()
 	{
-		cityLogic = new City(citizensCount, this);
+//		cityLogic = new City(citizensCount, this);
 	}
 
-	public NPCCharacterVisual PlaceOnMap(BaseCharacter character)
+	public NPCCharacterVisual PlaceCharacterOnMap(BaseCharacter character)
 	{
 		Rect rect = GetRect();
 		NPCCharacterVisual characterVisual = CharactersVisualizationManager.Instance.CreateCharacter(character, rect);

@@ -8,7 +8,6 @@ public static class BrainStorage
 
 	private static int brainTick = 1;
 	private static bool needToThink = true;
-	private static bool speedUp = false;
 
 	static BrainStorage()
 	{
@@ -57,7 +56,7 @@ public static class BrainStorage
 						}
 
 						brain.Think();
-						if (!speedUp)
+						if (TestGameController.Instance != null && !TestGameController.Instance.speedUp)
 						{
 							System.Threading.Thread.Sleep(brainTick / allBrains.Count);
 						}
@@ -69,7 +68,7 @@ public static class BrainStorage
 						}
 					}
 
-					if (speedUp)
+					if (TestGameController.Instance != null && TestGameController.Instance.speedUp)
 					{
 						System.Threading.Thread.Sleep(100);
 					}

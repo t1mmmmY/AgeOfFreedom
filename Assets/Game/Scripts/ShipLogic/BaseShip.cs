@@ -27,7 +27,7 @@ public class BaseShip : Logic
 		this.team = team;
 	}
 
-	private bool MoveTo(ShipTargetPoint targetPoint)
+	public bool MoveTo(ShipTargetPoint targetPoint)
 	{
 		City targetCity = targetPoint.GetTargetCity();
 		if (targetCity != null)

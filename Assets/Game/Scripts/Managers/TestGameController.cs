@@ -5,6 +5,7 @@ public class TestGameController : BaseSingleton<TestGameController>
 {
 	public bool showShips = true;
 	public bool showCharacters = true;
+	public bool speedUp = false;
 
 	protected override void Awake()
 	{

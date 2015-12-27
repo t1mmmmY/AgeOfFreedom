@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class City 
+public class City : Logic
 {
 	private int citizensCount;
 
@@ -29,6 +29,12 @@ public class City
 		}
 	}
 
+	public override void Init()
+	{
+		
+		base.Init();
+	}
+
 
 	BaseCharacter CreateRandomSailor()
 	{
@@ -40,7 +46,7 @@ public class City
 		{
 			if (TestGameController.Instance.showCharacters)
 			{
-				cityOnMap.PlaceOnMap(npcCharacter);
+				cityOnMap.PlaceCharacterOnMap(npcCharacter);
 			}
 		}
 
