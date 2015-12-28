@@ -51,7 +51,8 @@ public class BaseCharacter : Logic
 
 	public void LeaveTheCity()
 	{
-		location.LeaveTheCity();
+//		OnTheBoard();
+//		location.LeaveTheCity();
 	}
 
 	public void OnTheBoard()
@@ -76,6 +77,8 @@ public class BaseCharacter : Logic
 	{
 		//Buy ship if enough money
 		team.SetShip(ship);
+		team.ship.onGetDestination += OnShipGetDestination;
+		team.ship.onChangeLocation += OnShipChangeLocation;
 
 		tempShip = ship;
 		Loom.QueueOnMainThread(OnBuyShipEvent);
@@ -96,6 +99,21 @@ public class BaseCharacter : Logic
 	private void OnChangeTeam()
 	{
 		Loom.QueueOnMainThread(OnChangeTeamEvent);
+	}
+
+	private void OnShipGetDestination()
+	{
+		if (team.ship.location.inCity)
+		{
+			EnterTheCity(team.ship.location.GetCity());
+		}
+
+		brain.OnGetDestination();
+	}
+
+	private void OnShipChangeLocation()
+	{
+		location.SetPosition(team.ship.location.GetPosition());
 	}
 
 	private void OnChangeTeamEvent()

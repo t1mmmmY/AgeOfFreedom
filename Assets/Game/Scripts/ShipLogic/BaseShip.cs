@@ -11,6 +11,8 @@ public class BaseShip : Logic
 	public ShipTargetPoint destination;
 
 	public System.Action onChangeLocation;
+	public System.Action onGetDestination;
+
 
 	public override void Init()
 	{
@@ -68,16 +70,34 @@ public class BaseShip : Logic
 			location.SetPosition(newPosition);
 
 			System.Threading.Thread.Sleep(timeTick);
-			elapsedTime += (float)timeTick / 1000.0f * stats.speed;
+			elapsedTime += (float)timeTick / 1000.0f * stats.speed * 0.1f;
 
-			if (onChangeLocation != null)
-			{
-				onChangeLocation();
-			}
+			Loom.QueueOnMainThread(_OnChangeLocation);
+
 
 		} while (!IsGetDestination());
 
+		Loom.QueueOnMainThread(_OnGetDestination);
 		Debug.Log("Get Destination point!");
+	}
+
+	void _OnChangeLocation()
+	{
+		if (onChangeLocation != null)
+		{
+			onChangeLocation();
+		}
+	}
+
+	void _OnGetDestination()
+	{
+		//Enter the city if it is a city
+		location.EnterTheCity(destination.GetTargetCity());
+
+		if (onGetDestination != null)
+		{
+			onGetDestination();
+		}
 	}
 
 	bool IsGetDestination()

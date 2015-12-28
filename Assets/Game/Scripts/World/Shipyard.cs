@@ -15,7 +15,9 @@ public class Shipyard
 	{
 		if (allShips.Count == 0)
 		{
-			return CreateShip();
+			BaseShip ship = CreateShip();
+			ship.Init();
+			return ship;
 		}
 		else
 		{

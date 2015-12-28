@@ -26,12 +26,16 @@ public class Location
 	{
 		this.city = city;
 		inTheSea = false;
+		position = city.position;
 	}
 
 	public void LeaveTheCity()
 	{
 		lastCity = this.city;
-		position = city.position;
+		if (city != null)
+		{
+			position = this.city.position;
+		}
 		this.city = null;
 		inTheSea = true;
 	}

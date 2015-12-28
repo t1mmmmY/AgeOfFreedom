@@ -11,6 +11,8 @@ public class BaseBrain : Logic
 
 //	public string brainID { get; private set; }
 
+
+
 	public System.Action onChangeTeam;
 
 
@@ -68,6 +70,11 @@ public class BaseBrain : Logic
 //			Loom.QueueOnMainThread(onChangeTeam);
 		}
 	}
+
+	public virtual void OnGetDestination()
+	{
+	}
+
 
 	public override string ToString()
 	{

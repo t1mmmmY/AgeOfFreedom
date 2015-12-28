@@ -4,7 +4,7 @@ using System.Collections;
 public partial class NPCBrain : BaseBrain
 {
 	int failedRecruiting = 0;
-	bool isMoving = false;
+	protected bool isMoving = false;
 
 	public override void CreateTeam()
 	{
@@ -73,6 +73,10 @@ public partial class NPCBrain : BaseBrain
 			if (RecruitToTheTeam(someCharacter))
 			{
 				//			Debug.Log(someCharacter.name + " has joined team " + name);
+			}
+			else
+			{
+				failedRecruiting++;
 			}
 		}
 		else
@@ -188,6 +192,15 @@ public partial class NPCBrain : BaseBrain
 		targetPoint.SetTargetCity(CitiesManager.Instance.GetRandomCity(character.location.GetLastCity()));
 
 		character.team.ship.MoveTo(targetPoint);
+	}
+
+
+	public override void OnGetDestination()
+	{
+		isMoving = false;
+		failedRecruiting = 0;
+		
+		base.OnGetDestination();
 	}
 
 }

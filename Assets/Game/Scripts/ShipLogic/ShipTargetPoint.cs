@@ -9,6 +9,7 @@ public class ShipTargetPoint
 	public bool SetTargetCity(City city)
 	{
 		targetCity = city;
+		targetPoint = targetCity.position;
 		return targetCity != null ? true : false;
 	}
 
