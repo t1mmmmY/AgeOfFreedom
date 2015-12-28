@@ -5,26 +5,35 @@ using System.Collections;
 public class Location
 {
 	City city;
-//	Tavern tavern;
+	Vector2 position;
+	City lastCity;
 
 	public Location()
 	{
-//		tavern = null;
+		position = Vector2.zero;
 	}
 
-//	public bool inTavern
-//	{
-//		get { return tavern != null ? true : false; }
-//	}
 
 	public bool inCity
 	{
 		get { return city != null ? true : false; }
 	}
 
-	public bool inTheSea
+	public bool inTheSea { get; private set; }
+
+
+	public void EnterTheCity(City city)
 	{
-		get { return false; }
+		this.city = city;
+		inTheSea = false;
+	}
+
+	public void LeaveTheCity()
+	{
+		lastCity = this.city;
+		position = city.position;
+		this.city = null;
+		inTheSea = true;
 	}
 
 	public City GetCity()
@@ -32,31 +41,24 @@ public class Location
 		return city;
 	}
 
-	public void EnterTheCity(City city)
+	public City GetLastCity()
 	{
-		this.city = city;
-//		this.tavern = city.tavern;
+		return lastCity;
 	}
 
-	public void LeaveTheCity()
+	public Vector2 GetPosition()
 	{
-		this.city = null;
+		return position;
 	}
-
-
 
 	public Tavern GetTavern()
 	{
 		return city.tavern;
 	}
 
-//	public void EnterTheTavern(Tavern tavern)
-//	{
-//		this.tavern = tavern;
-//	}
-//
-//	public void LeaveTheTavern()
-//	{
-//		this.tavern = null;
-//	}
+	public void SetPosition(Vector2 newPos)
+	{
+		position = newPos;
+	}
+
 }

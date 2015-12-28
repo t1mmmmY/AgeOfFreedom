@@ -11,16 +11,21 @@ public class City : Logic
 	public Tavern tavern { get; private set; }
 	public Shipyard shipyard { get; private set; }
 
+	public Vector2 position;
+
 	private CityOnMap cityOnMap;
 
 
-	public City(int citizensCount, CityOnMap cityOnMap = null)
+//	public City(int citizensCount, CityOnMap cityOnMap = null)
+	public City(CityData data)
 	{
-		this.citizensCount = citizensCount;
+		this.citizensCount = data.citizensCount;
 		tavern = new Tavern();
 		shipyard = new Shipyard();
 
-		this.cityOnMap = cityOnMap;
+		this.cityOnMap = data.cityVisualization;
+
+		this.position = data.position;
 
 		//TO DEL
 		for (int i = 0; i < citizensCount * sailorsPercent; i++)

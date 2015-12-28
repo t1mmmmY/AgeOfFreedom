@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[ExecuteInEditMode]
 [System.Serializable]
 public class CityData
 {
@@ -8,6 +9,8 @@ public class CityData
 
 	[Range(0, 10000)]
 	[SerializeField] int _citizensCount;
+
+	[SerializeField] Vector2 _position;
 
 	public CityOnMap cityVisualization
 	{
@@ -17,5 +20,13 @@ public class CityData
 	public int citizensCount
 	{
 		get { return _citizensCount; }
+	}
+
+	public Vector2 position
+	{
+		get 
+		{
+			return _position;
+		}
 	}
 }

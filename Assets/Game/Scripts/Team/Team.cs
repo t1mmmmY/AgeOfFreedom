@@ -9,7 +9,7 @@ public class Team
 	[SerializeField] int countSailors = 0;
 	public List<BaseCharacter> characters { get; private set; }
 	public BaseShip ship { get; private set; }
-
+//	public Location location { get; private set; }
 
 	//TO DEL
 	[SerializeField] public Color teamColor;
@@ -43,11 +43,18 @@ public class Team
 	{
 		//Set ship if this possible
 		this.ship = ship;
+		ship.ChangeTeam(this);
 		return true;
 	}
 
 	public void OnTheBoad()
 	{
+//		location.LeaveTheCity();
+
+		foreach (BaseCharacter character in characters)
+		{
+			character.OnTheBoard();
+		}
 	}
 
 	void AddCharacter(BaseCharacter character)

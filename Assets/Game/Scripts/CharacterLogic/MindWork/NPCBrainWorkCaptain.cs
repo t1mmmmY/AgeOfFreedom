@@ -4,6 +4,7 @@ using System.Collections;
 public partial class NPCBrain : BaseBrain
 {
 	int failedRecruiting = 0;
+	bool isMoving = false;
 
 	public override void CreateTeam()
 	{
@@ -22,17 +23,17 @@ public partial class NPCBrain : BaseBrain
 			//In the city
 			bool doWorkInCity = false;
 
-			doWorkInCity = RecruitTheTeam();
-			doWorkInCity = BuySupplies();
-			doWorkInCity = SellGoods();
-			doWorkInCity = BuyNewShip();
-			doWorkInCity = BuyGoods();
-			doWorkInCity = BuySomeItems();
-			doWorkInCity = PlayGames();
-			doWorkInCity = TakeARest();
-			doWorkInCity = Teambuilding();
-			doWorkInCity = GetLastGossip(); //Last information
-			doWorkInCity = RecruitOtherCaptains();
+			doWorkInCity = RecruitTheTeam() ? true : doWorkInCity;
+			doWorkInCity = BuySupplies() ? true : doWorkInCity;
+			doWorkInCity = SellGoods() ? true : doWorkInCity;
+			doWorkInCity = BuyNewShip() ? true : doWorkInCity;
+			doWorkInCity = BuyGoods() ? true : doWorkInCity;
+			doWorkInCity = BuySomeItems() ? true : doWorkInCity;
+			doWorkInCity = PlayGames() ? true : doWorkInCity;
+			doWorkInCity = TakeARest() ? true : doWorkInCity;
+			doWorkInCity = Teambuilding() ? true : doWorkInCity;
+			doWorkInCity = GetLastGossip() ? true : doWorkInCity; //Last information
+			doWorkInCity = RecruitOtherCaptains() ? true : doWorkInCity;
 
 			//Go only if do all other work
 			if (!doWorkInCity && DoIWantToGo())
@@ -42,7 +43,13 @@ public partial class NPCBrain : BaseBrain
 		}
 		else
 		{
+			//TODO			
 			//In the sea
+
+			if (!isMoving)
+			{
+				MoveToOtherCity();
+			}
 		}
 	}
 
@@ -52,7 +59,7 @@ public partial class NPCBrain : BaseBrain
 		{
 			return false;
 		}
-
+//		_RecruitTheTeam();
 		Loom.QueueOnMainThread(_RecruitTheTeam);
 
 		return true;
@@ -143,9 +150,14 @@ public partial class NPCBrain : BaseBrain
 
 	bool OnTheBoad()
 	{
-		character.team.OnTheBoad();
+		Loom.QueueOnMainThread(_OnTheBoard);
 
 		return true;
+	}
+
+	void _OnTheBoard()
+	{
+		character.team.OnTheBoad();
 	}
 
 
@@ -166,14 +178,16 @@ public partial class NPCBrain : BaseBrain
 
 	void MoveToOtherCity()
 	{
-		//Team should go on board firs
+		isMoving = true;
+		Loom.QueueOnMainThread(_MoveToOtherCity);
+	}
 
-//		//Set destination
-//		ShipTargetPoint targetPoint = new ShipTargetPoint();
-//		targetPoint.SetTargetCity();
-//
-//		//Move
-//		character.team.ship.MoveTo(targetPoint);
+	void _MoveToOtherCity()
+	{
+		ShipTargetPoint targetPoint = new ShipTargetPoint();
+		targetPoint.SetTargetCity(CitiesManager.Instance.GetRandomCity(character.location.GetLastCity()));
+
+		character.team.ship.MoveTo(targetPoint);
 	}
 
 }

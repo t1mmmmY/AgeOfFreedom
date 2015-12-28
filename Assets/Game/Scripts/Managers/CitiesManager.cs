@@ -17,11 +17,30 @@ public class CitiesManager : BaseSingleton<CitiesManager>
 	{
 		foreach (CityData cityData in allCitiesData)
 		{
-			City city = new City(cityData.citizensCount, cityData.cityVisualization);
+			City city = new City(cityData);
 			city.Init();
 			cityData.cityVisualization.Init(city);
 			allCities.Add(city);
 		}
+	}
+
+	public City GetRandomCity(City currentCity = null)
+	{
+		bool available = false;
+		System.Random rand = new System.Random();
+		int number = 0;
+		do 
+		{
+			number = rand.Next(0, allCities.Count);
+
+			if (allCities[number] != currentCity)
+			{
+				available = true;
+			}
+				
+		} while (!available);
+
+		return allCities[number];
 	}
 
 	protected override void OnDestroy()

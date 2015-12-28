@@ -54,6 +54,11 @@ public class BaseCharacter : Logic
 		location.LeaveTheCity();
 	}
 
+	public void OnTheBoard()
+	{
+		location.LeaveTheCity();
+	}
+
 	public virtual void EnterTheTavern(Tavern tavern)
 	{
 //		location.EnterTheTavern(tavern);

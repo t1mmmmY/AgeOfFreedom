@@ -3,23 +3,17 @@ using System.Collections;
 
 public class CityOnMap : Visualisation 
 {
-	[Range(0, 10000)]
-//	[SerializeField] private int citizensCount = 2000;
-
-
 	City cityLogic;
+	public Vector2 position { get; private set; }
 
 	public override void Init(Logic logic)
 	{
 		cityLogic = (City)logic;
+		position = new Vector2(transform.position.x, transform.position.z);
 
 		base.Init(logic);
 	}
 
-	void Start()
-	{
-//		cityLogic = new City(citizensCount, this);
-	}
 
 	public NPCCharacterVisual PlaceCharacterOnMap(BaseCharacter character)
 	{
