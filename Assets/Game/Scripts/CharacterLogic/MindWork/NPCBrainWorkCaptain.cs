@@ -26,6 +26,8 @@ public partial class NPCBrain : BaseBrain
 			doWorkInCity = RecruitTheTeam() ? true : doWorkInCity;
 			doWorkInCity = BuySupplies() ? true : doWorkInCity;
 			doWorkInCity = SellGoods() ? true : doWorkInCity;
+			doWorkInCity = RepairShip() ? true : doWorkInCity;
+			doWorkInCity = DismissTeam() ? true : doWorkInCity;
 			doWorkInCity = BuyNewShip() ? true : doWorkInCity;
 			doWorkInCity = BuyGoods() ? true : doWorkInCity;
 			doWorkInCity = BuySomeItems() ? true : doWorkInCity;
@@ -93,6 +95,18 @@ public partial class NPCBrain : BaseBrain
 	}
 
 	bool SellGoods()
+	{
+		//TODO
+		return false;
+	}
+
+	bool RepairShip()
+	{
+		//TODO
+		return false;
+	}
+
+	bool DismissTeam()
 	{
 		//TODO
 		return false;

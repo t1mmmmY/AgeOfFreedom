@@ -37,7 +37,6 @@ public class BaseShip : Logic
 
 	public bool MoveTo(ShipTargetPoint targetPoint)
 	{
-		Debug.Log("Move to " + targetPoint.GetTargetCity().ToString());
 		destination = targetPoint;
 		startPosition = location.GetPosition();
 		Loom.RunAsync(Moving);
@@ -70,7 +69,7 @@ public class BaseShip : Logic
 			location.SetPosition(newPosition);
 
 			System.Threading.Thread.Sleep(timeTick);
-			elapsedTime += (float)timeTick / 1000.0f * stats.speed * 0.1f;
+			elapsedTime += (float)timeTick / 1000.0f * stats.speed / distance * 5;
 
 			Loom.QueueOnMainThread(_OnChangeLocation);
 
@@ -78,7 +77,6 @@ public class BaseShip : Logic
 		} while (!IsGetDestination());
 
 		Loom.QueueOnMainThread(_OnGetDestination);
-		Debug.Log("Get Destination point!");
 	}
 
 	void _OnChangeLocation()
