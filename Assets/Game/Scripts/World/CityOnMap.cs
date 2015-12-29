@@ -23,6 +23,11 @@ public class CityOnMap : Visualisation
 		return characterVisual;
 	}
 
+	public Vector3 GetRandomPositionInCity()
+	{
+		return CharactersVisualizationManager.Instance.RandomPositionInRect(GetRect());
+	}
+
 	public Rect GetRect()
 	{
 		return new Rect(transform.position.x - transform.localScale.x / 2, transform.position.z - transform.localScale.z / 2,

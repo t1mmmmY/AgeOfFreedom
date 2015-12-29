@@ -16,7 +16,6 @@ public class City : Logic
 	private CityOnMap cityOnMap;
 
 
-//	public City(int citizensCount, CityOnMap cityOnMap = null)
 	public City(CityData data)
 	{
 		this.citizensCount = data.citizensCount;
@@ -36,7 +35,6 @@ public class City : Logic
 
 	public override void Init()
 	{
-		
 		base.Init();
 	}
 
@@ -56,6 +54,16 @@ public class City : Logic
 		}
 
 		return npcCharacter;
+	}
+
+	public Vector3 GetRandomPositionInCity()
+	{
+		if (cityOnMap == null)
+		{
+			return new Vector3(position.x, 1, position.y);
+		}
+
+		return cityOnMap.GetRandomPositionInCity();
 	}
 
 	public Rect GetRect()

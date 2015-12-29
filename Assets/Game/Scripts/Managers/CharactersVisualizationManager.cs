@@ -31,7 +31,7 @@ public class CharactersVisualizationManager : BaseSingleton<CharactersVisualizat
 		return characterVisual;
 	}
 
-	Vector3 RandomPositionInRect(Rect rect)
+	public Vector3 RandomPositionInRect(Rect rect)
 	{
 		return new Vector3(Random.Range(rect.xMin, rect.xMax),
 			1,

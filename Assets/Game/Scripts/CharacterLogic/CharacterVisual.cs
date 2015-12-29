@@ -15,26 +15,37 @@ public class CharacterVisual : Visualisation
 
 			//Subscribe events here
 			character.onChangeTeam += OnChangeTeam;
+			character.onTheBoard += OnTheBoard;
+			character.onShipChangeLocation += OnShipChangeLocation;
+			character.onShipGetDestination += OnShipGetDestination;
 		}
-
-
+		else
+		{
+			Debug.LogError("Logic is not a BaseCharacter logic!");
+		}
 	}
 
 	void OnDestroy()
 	{
 		character.onChangeTeam -= OnChangeTeam;
+		character.onTheBoard -= OnTheBoard;
+		character.onShipChangeLocation -= OnShipChangeLocation;
+		character.onShipGetDestination -= OnShipGetDestination;
 	}
 
-//	public virtual void Init(BaseCharacter character)
-//	{
-//		this.character = character;
-//		characterVisualID = this.character.characterID;
-//
-//		//Subscribe events here
-//		this.character.brain.onChangeTeam += OnChangeTeam;
-//	}
+	protected virtual void OnChangeTeam(BaseCharacter character, Team team)
+	{
+	}
 
-	public virtual void OnChangeTeam(BaseCharacter character, Team team)
+	protected virtual void OnTheBoard()
+	{
+	}
+
+	protected virtual void OnShipChangeLocation()
+	{
+	}
+
+	protected virtual void OnShipGetDestination()
 	{
 	}
 }

@@ -22,6 +22,9 @@ public class BaseCharacter : Logic
 	//Events
 	public System.Action<BaseCharacter, Team> onChangeTeam;
 	public System.Action<BaseCharacter, BaseShip> onBuyShip;
+	public System.Action onTheBoard;
+	public System.Action onShipChangeLocation;
+	public System.Action onShipGetDestination;
 
 
 	public BaseCharacter()
@@ -47,6 +50,8 @@ public class BaseCharacter : Logic
 	public void EnterTheCity(City city)
 	{
 		location.EnterTheCity(city);
+
+
 	}
 
 	public void LeaveTheCity()
@@ -58,6 +63,14 @@ public class BaseCharacter : Logic
 	public void OnTheBoard()
 	{
 		location.LeaveTheCity();
+
+		team.ship.onGetDestination += OnShipGetDestination;
+		team.ship.onChangeLocation += OnShipChangeLocation;
+
+		if (onTheBoard != null)
+		{
+			onTheBoard();
+		}
 	}
 
 	public virtual void EnterTheTavern(Tavern tavern)
@@ -77,8 +90,7 @@ public class BaseCharacter : Logic
 	{
 		//Buy ship if enough money
 		team.SetShip(ship);
-		team.ship.onGetDestination += OnShipGetDestination;
-		team.ship.onChangeLocation += OnShipChangeLocation;
+
 
 		tempShip = ship;
 		Loom.QueueOnMainThread(OnBuyShipEvent);
@@ -101,6 +113,17 @@ public class BaseCharacter : Logic
 		Loom.QueueOnMainThread(OnChangeTeamEvent);
 	}
 
+
+	private void OnShipChangeLocation()
+	{
+		location.SetPosition(team.ship.location.GetPosition());
+
+		if (onShipChangeLocation != null)
+		{
+			onShipChangeLocation();
+		}
+	}
+
 	private void OnShipGetDestination()
 	{
 		if (team.ship.location.inCity)
@@ -109,12 +132,16 @@ public class BaseCharacter : Logic
 		}
 
 		brain.OnGetDestination();
+
+		if (onShipGetDestination != null)
+		{
+			onShipGetDestination();
+		}
+
+		team.ship.onGetDestination -= OnShipGetDestination;
+		team.ship.onChangeLocation -= OnShipChangeLocation;
 	}
 
-	private void OnShipChangeLocation()
-	{
-		location.SetPosition(team.ship.location.GetPosition());
-	}
 
 	private void OnChangeTeamEvent()
 	{
