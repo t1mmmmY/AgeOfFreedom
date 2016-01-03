@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public partial class NPCBrain : BaseBrain
 {
 	protected bool isMoving = false;
+	float maxVisibilityRange = 1.0f;
 
 	enum Capabilitiy
 	{
@@ -44,6 +45,10 @@ public partial class NPCBrain : BaseBrain
 					DoRevenge();
 					break;
 			}
+		}
+		else
+		{
+			
 		}
 	}
 
@@ -96,6 +101,16 @@ public partial class NPCBrain : BaseBrain
 	}
 
 
+	void SeeTheShips(List<BaseShip> nearestShips)
+	{
+		//TODO
+		//What to do when see the ship
+
+		System.Random rand = new System.Random();
+		int targetShipNumber = rand.Next(0, nearestShips.Count);
+		AttackTheShip(nearestShips[targetShipNumber]);
+	}
+
 
 	void MoveToOtherCity()
 	{
@@ -111,14 +126,42 @@ public partial class NPCBrain : BaseBrain
 		character.team.ship.MoveTo(targetPoint);
 	}
 
+	void AttackTheShip(BaseShip otherShip)
+	{
+		this.character.team.ship.Fight(otherShip, true);
+		otherShip.Fight(this.character.team.ship, false);
+	}
+
 
 
 	public override void OnGetDestination()
 	{
-		isMoving = false;
-		failedRecruiting = 0;
+		if (IsCaptain())
+		{
+			isMoving = false;
+			failedRecruiting = 0;
+		}
 
 		base.OnGetDestination();
 	}
+
+	public override void OnChangePosition()
+	{
+		if (IsCaptain())
+		{
+			List<BaseShip> nearestShips = ShipsManager.GetNearestShips(character.team.ship, maxVisibilityRange);
+			if (nearestShips.Count > 0)
+			{
+				Debug.Log("I see a ship!");
+				SeeTheShips(nearestShips);
+
+			}
+
+		}
+
+		base.OnChangePosition();
+	}
+
+
 
 }

@@ -5,7 +5,7 @@ using System.Linq;
 //[System.Serializable]
 public partial class NPCBrain : BaseBrain
 {
-	bool alive = false;
+	bool active = false;
 
 	public override void Init()
 	{
@@ -19,13 +19,13 @@ public partial class NPCBrain : BaseBrain
 		InitCharacter(character);
 		this.character.team = null;
 
-		alive = true;
+		active = true;
 		failedRecruiting = 0;
 	}
 
 	public void Think()
 	{
-		if (!alive)
+		if (!active)
 		{
 			return;
 		}
@@ -35,7 +35,7 @@ public partial class NPCBrain : BaseBrain
 
 	public void StopThink()
 	{
-		alive = false;
+		active = false;
 	}
 
 	public override bool WantToJoin(Team otherTeam)
@@ -79,7 +79,7 @@ public partial class NPCBrain : BaseBrain
 
 	bool CheckIfWantToChangeTeam(Team otherTeam)
 	{
-		if (character.team.captain == this.character)
+		if (IsCaptain())
 		{
 			return false;
 		}
@@ -114,7 +114,7 @@ public partial class NPCBrain : BaseBrain
 		else
 		{
 			//I am a captain!
-			if (character.team.captain == this.character)
+			if (IsCaptain())
 			{
 				DoCaptainWork();
 			}
@@ -134,6 +134,13 @@ public partial class NPCBrain : BaseBrain
 
 	void DoSailorWork()
 	{
+	}
+
+	public override void OnFighting()
+	{
+		StopThink();
+
+		base.OnFighting();
 	}
 
 

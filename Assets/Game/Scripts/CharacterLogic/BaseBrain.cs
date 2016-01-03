@@ -9,16 +9,12 @@ public class BaseBrain : Logic
 
 	public BaseCharacter character { get; protected set; }
 
-//	public string brainID { get; private set; }
-
-
 
 	public System.Action onChangeTeam;
 
 
 	public BaseBrain()
 	{
-//		brainID = System.Guid.NewGuid().ToString();
 	}
 
 	public override void Init()
@@ -34,13 +30,11 @@ public class BaseBrain : Logic
 
 	public virtual void CreateTeam()
 	{
-//		Debug.Log("CreateTeam");
 		character.team = new Team(character);
 
 		if (onChangeTeam != null)
 		{
 			onChangeTeam();
-//			Loom.QueueOnMainThread(onChangeTeam);
 		}
 	}
 
@@ -55,6 +49,11 @@ public class BaseBrain : Logic
 		{
 			return false;
 		}
+	}
+
+	public bool IsCaptain()
+	{
+		return character.team.captain == this.character ? true : false;
 	}
 
 	public virtual bool WantToJoin(Team otherTeam)
@@ -75,6 +74,13 @@ public class BaseBrain : Logic
 	{
 	}
 
+	public virtual void OnChangePosition()
+	{
+	}
+
+	public virtual void OnFighting()
+	{
+	}
 
 	public override string ToString()
 	{

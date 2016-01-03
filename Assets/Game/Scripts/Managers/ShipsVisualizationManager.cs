@@ -21,7 +21,6 @@ public class ShipsVisualizationManager : BaseSingleton<ShipsVisualizationManager
 
 		go.transform.parent = this.transform;
 		go.transform.position = RandomPositionInRect(rect);
-//		go.name = ship.name;
 
 		ShipVisual shipVisual = go.GetComponent<ShipVisual>();
 		shipVisual.Init(ship);

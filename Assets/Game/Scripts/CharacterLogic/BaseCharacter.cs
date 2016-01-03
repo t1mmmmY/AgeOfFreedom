@@ -25,7 +25,7 @@ public class BaseCharacter : Logic
 	public System.Action onTheBoard;
 	public System.Action onShipChangeLocation;
 	public System.Action onShipGetDestination;
-
+	public System.Action onFighting;
 
 	public BaseCharacter()
 	{
@@ -66,6 +66,7 @@ public class BaseCharacter : Logic
 
 		team.ship.onGetDestination += OnShipGetDestination;
 		team.ship.onChangeLocation += OnShipChangeLocation;
+		team.ship.onFighting += OnFighting ;
 
 		if (onTheBoard != null)
 		{
@@ -118,6 +119,8 @@ public class BaseCharacter : Logic
 	{
 		location.SetPosition(team.ship.location.GetPosition());
 
+		brain.OnChangePosition();
+
 		if (onShipChangeLocation != null)
 		{
 			onShipChangeLocation();
@@ -142,6 +145,17 @@ public class BaseCharacter : Logic
 		team.ship.onChangeLocation -= OnShipChangeLocation;
 	}
 
+	private void OnFighting()
+	{
+		brain.OnFighting();
+
+		if (onFighting != null)
+		{
+			onFighting();
+		}
+
+		team.ship.onFighting -= OnFighting;
+	}
 
 	private void OnChangeTeamEvent()
 	{

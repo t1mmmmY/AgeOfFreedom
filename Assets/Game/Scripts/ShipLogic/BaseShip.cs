@@ -12,7 +12,11 @@ public class BaseShip : Logic
 
 	public System.Action onChangeLocation;
 	public System.Action onGetDestination;
+	public System.Action onFighting;
 
+
+	bool stopMoving = false;
+	bool fighting = false;
 
 	public override void Init()
 	{
@@ -35,27 +39,27 @@ public class BaseShip : Logic
 		location.EnterTheCity(team.captain.location.GetCity());
 	}
 
+	public void LeaveTheCity()
+	{
+		location.LeaveTheCity();
+	}
+
 	public bool MoveTo(ShipTargetPoint targetPoint)
 	{
+		stopMoving = false;
+		fighting = false;
+
 		destination = targetPoint;
 		startPosition = location.GetPosition();
 		Loom.RunAsync(Moving);
 
 		return true;
-
-//		City targetCity = targetPoint.GetTargetCity();
-//		if (targetCity != null)
-//		{
-//			
-//			
-//			return true;
-//		}
-//		else
-//		{
-//			return false;
-//		}
 	}
 
+	void StopMoving()
+	{
+		stopMoving = true;
+	}
 
 	void Moving()
 	{
@@ -74,9 +78,16 @@ public class BaseShip : Logic
 			Loom.QueueOnMainThread(_OnChangeLocation);
 
 
-		} while (!IsGetDestination());
+		} while (!IsGetDestination() && !stopMoving);
 
-		Loom.QueueOnMainThread(_OnGetDestination);
+		if (fighting)
+		{
+			Loom.QueueOnMainThread(_OnFighting);
+		}
+		else
+		{
+			Loom.QueueOnMainThread(_OnGetDestination);
+		}
 	}
 
 	void _OnChangeLocation()
@@ -89,12 +100,23 @@ public class BaseShip : Logic
 
 	void _OnGetDestination()
 	{
+		stopMoving = true;
+		fighting = false;
+
 		//Enter the city if it is a city
 		location.EnterTheCity(destination.GetTargetCity());
 
 		if (onGetDestination != null)
 		{
 			onGetDestination();
+		}
+	}
+
+	void _OnFighting()
+	{
+		if (onFighting != null)
+		{
+			onFighting();
 		}
 	}
 
@@ -107,6 +129,33 @@ public class BaseShip : Logic
 		else
 		{
 			return false;
+		}
+	}
+
+
+	public void Fight(BaseShip otherShip, bool attack)
+	{
+		Debug.Log("FIGHT!");
+		fighting = true;
+		StopMoving();
+
+		if (attack)
+		{
+			BattleSimulator.SimulateButtle(this, otherShip);
+		}
+	}
+
+	public void OnFinishFighting(ButtleResult result)
+	{
+		//TODO
+		switch (result)
+		{
+			case ButtleResult.Win:
+				break;
+			case ButtleResult.Defeat:
+				break;
+			case ButtleResult.EnemyEscaped:
+				break;
 		}
 	}
 

@@ -15,12 +15,15 @@ public class Shipyard
 	{
 		if (allShips.Count == 0)
 		{
+			//Create ship
 			BaseShip ship = CreateShip();
 			ship.Init();
+			ShipsManager.AddShip(ship);
 			return ship;
 		}
 		else
 		{
+			//Get random ship
 			System.Random rand = new System.Random();
 			BaseShip ship = allShips[rand.Next(0, allShips.Count)];
 			allShips.Remove(ship);
