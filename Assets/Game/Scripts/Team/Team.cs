@@ -28,8 +28,15 @@ public class Team
 		teamColor = new Color((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
 	}
 
+	public void SetCaptain(BaseCharacter newCaptain)
+	{
+		captain = newCaptain;
+	}
+
 	public void Recruit(BaseCharacter character)
 	{
+		character.ChangeTeam(this);
+
 		AddCharacter(character);
 	}
 
@@ -53,7 +60,7 @@ public class Team
 			character.OnTheBoard();
 		}
 
-		ship.LeaveTheCity();
+//		ship.LeaveTheCity();
 	}
 
 	void AddCharacter(BaseCharacter character)

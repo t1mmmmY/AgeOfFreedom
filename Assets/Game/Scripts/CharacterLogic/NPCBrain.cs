@@ -17,7 +17,8 @@ public partial class NPCBrain : BaseBrain
 		stats = new CharacterStats();
 		stats.InitRandomCharacter();
 		InitCharacter(character);
-		this.character.team = null;
+		this.character.ChangeTeam(null);
+//		this.character.team = null;
 
 		active = true;
 		failedRecruiting = 0;
@@ -58,7 +59,6 @@ public partial class NPCBrain : BaseBrain
 		{
 			character.team.Leave(this.character);
 		}
-		character.team = otherTeam;
 		otherTeam.Recruit(this.character);
 
 		base.Recruit(otherTeam);

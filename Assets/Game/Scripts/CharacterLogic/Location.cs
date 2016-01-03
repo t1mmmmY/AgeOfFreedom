@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 //There is much work to do
-public class Location
+public class Location : ICloneable
 {
 	City city;
 	Vector2 position;
@@ -63,6 +64,16 @@ public class Location
 	public void SetPosition(Vector2 newPos)
 	{
 		position = newPos;
+	}
+
+	public object Clone()
+	{
+		Location location = new Location();
+		location.city = city;
+		location.position = position;
+		location.lastCity = lastCity;
+		location.inTheSea = inTheSea;
+		return location;
 	}
 
 }

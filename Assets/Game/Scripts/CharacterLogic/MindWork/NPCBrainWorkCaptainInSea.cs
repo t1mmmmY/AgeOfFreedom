@@ -101,14 +101,14 @@ public partial class NPCBrain : BaseBrain
 	}
 
 
-	void SeeTheShips(List<BaseShip> nearestShips)
+	void SeeTheFleets(List<Fleet> nearestFleets)
 	{
 		//TODO
-		//What to do when see the ship
+		//What to do when see the fleet
 
 		System.Random rand = new System.Random();
-		int targetShipNumber = rand.Next(0, nearestShips.Count);
-		AttackTheShip(nearestShips[targetShipNumber]);
+		int targetFleetNumber = rand.Next(0, nearestFleets.Count);
+		AttackTheFleet(nearestFleets[targetFleetNumber]);
 	}
 
 
@@ -123,13 +123,13 @@ public partial class NPCBrain : BaseBrain
 		ShipTargetPoint targetPoint = new ShipTargetPoint();
 		targetPoint.SetTargetCity(CitiesManager.Instance.GetRandomCity(character.location.GetLastCity()));
 
-		character.team.ship.MoveTo(targetPoint);
+		character.fleet.MoveTo(targetPoint);
 	}
 
-	void AttackTheShip(BaseShip otherShip)
+	void AttackTheFleet(Fleet otherFleet)
 	{
-		this.character.team.ship.Fight(otherShip, true);
-		otherShip.Fight(this.character.team.ship, false);
+		this.character.fleet.Fight(otherFleet, true);
+		otherFleet.Fight(this.character.fleet, false);
 	}
 
 
@@ -149,15 +149,20 @@ public partial class NPCBrain : BaseBrain
 	{
 		if (IsCaptain())
 		{
-			List<BaseShip> nearestShips = ShipsManager.GetNearestShips(character.team.ship, maxVisibilityRange);
-			if (nearestShips.Count > 0)
+//			Debug.Log("OnChangePosition");
+			List<Fleet> nearestFleets = FleetsManager.GetNearestFleets(character.fleet, maxVisibilityRange);
+			if (nearestFleets.Count > 0)
 			{
 				Debug.Log("I see a ship!");
-				SeeTheShips(nearestShips);
+				SeeTheFleets(nearestFleets);
 
 			}
 
 		}
+//		else
+//		{
+//			Debug.Log("I'm not a captain");
+//		}
 
 		base.OnChangePosition();
 	}

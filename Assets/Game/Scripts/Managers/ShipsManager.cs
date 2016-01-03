@@ -24,21 +24,17 @@ public static class ShipsManager
 		}
 	}
 
-	public static List<BaseShip> GetNearestShips(BaseShip ship, float maxDistance)
+	public static bool RemoveShip(BaseShip ship)
 	{
-		List<BaseShip> nearestShips = new List<BaseShip>();
-
-		foreach (BaseShip someShip in allShips)
+		if (allShips.Contains(ship))
 		{
-			if (someShip != ship && 
-				Vector2.Distance(someShip.location.GetPosition(), ship.location.GetPosition()) <= maxDistance &&
-				someShip.location.inTheSea)
-			{
-				nearestShips.Add(someShip);
-			}
+			allShips.Remove(ship);
+			return true;
 		}
-
-		return nearestShips;
+		else
+		{
+			return false;
+		}
 	}
 
 }

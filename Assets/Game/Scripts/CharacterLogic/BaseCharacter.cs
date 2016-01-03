@@ -11,8 +11,10 @@ public class BaseCharacter : Logic
 
 //	public string characterID { get; private set; }
 
-	public Team team { get; set; }
+	public bool isCaptain { get; private set; }
+	public Team team { get; private set; }
 	public Location location { get; private set; }
+	public Fleet fleet { get; private set; }
 
 
 	//Items
@@ -50,8 +52,6 @@ public class BaseCharacter : Logic
 	public void EnterTheCity(City city)
 	{
 		location.EnterTheCity(city);
-
-
 	}
 
 	public void LeaveTheCity()
@@ -64,9 +64,9 @@ public class BaseCharacter : Logic
 	{
 		location.LeaveTheCity();
 
-		team.ship.onGetDestination += OnShipGetDestination;
-		team.ship.onChangeLocation += OnShipChangeLocation;
-		team.ship.onFighting += OnFighting ;
+		fleet.onGetDestination += OnFleetGetDestination;
+		fleet.onChangeLocation += OnFleetChangeLocation;
+		fleet.onFighting += OnFighting ;
 
 		if (onTheBoard != null)
 		{
@@ -74,16 +74,42 @@ public class BaseCharacter : Logic
 		}
 	}
 
+	//Probably don't need this
 	public virtual void EnterTheTavern(Tavern tavern)
 	{
 //		location.EnterTheTavern(tavern);
 	}
 
+	//Probably don't need this
 	public virtual void LeaveTheTavern()
 	{
 //		location.LeaveTheTavern();
 	}
 
+	public void BecomeACaptain()
+	{
+		isCaptain = true;
+		team = new Team(this);
+		fleet = new Fleet(this);
+
+		Loom.QueueOnMainThread(_CreateFleetVisual);
+
+	}
+
+	private void _CreateFleetVisual()
+	{
+		if (TestGameController.Instance.showFleets)
+		{
+			FleetsVisualizationManager.Instance.CreateFleet(fleet, location.GetCity().GetRect());
+		}
+	}
+
+	public void StopBeingCaptain()
+	{
+		isCaptain = false;
+		fleet = null;
+		team.SetCaptain(null);
+	}
 
 	BaseShip tempShip;
 
@@ -91,7 +117,7 @@ public class BaseCharacter : Logic
 	{
 		//Buy ship if enough money
 		team.SetShip(ship);
-
+		fleet.AddShip(ship);
 
 		tempShip = ship;
 		Loom.QueueOnMainThread(OnBuyShipEvent);
@@ -108,6 +134,14 @@ public class BaseCharacter : Logic
 		tempShip = null;
 	}
 
+	public void ChangeTeam(Team newTeam)
+	{
+		team = newTeam;
+		if (team != null)
+		{
+			fleet = team.captain.fleet;
+		}
+	}
 
 	private void OnChangeTeam()
 	{
@@ -115,9 +149,9 @@ public class BaseCharacter : Logic
 	}
 
 
-	private void OnShipChangeLocation()
+	private void OnFleetChangeLocation()
 	{
-		location.SetPosition(team.ship.location.GetPosition());
+		location.SetPosition(fleet.location.GetPosition());
 
 		brain.OnChangePosition();
 
@@ -127,11 +161,11 @@ public class BaseCharacter : Logic
 		}
 	}
 
-	private void OnShipGetDestination()
+	private void OnFleetGetDestination()
 	{
-		if (team.ship.location.inCity)
+		if (fleet.location.inCity)
 		{
-			EnterTheCity(team.ship.location.GetCity());
+			EnterTheCity(fleet.location.GetCity());
 		}
 
 		brain.OnGetDestination();
@@ -141,8 +175,8 @@ public class BaseCharacter : Logic
 			onShipGetDestination();
 		}
 
-		team.ship.onGetDestination -= OnShipGetDestination;
-		team.ship.onChangeLocation -= OnShipChangeLocation;
+		fleet.onGetDestination -= OnFleetGetDestination;
+		fleet.onChangeLocation -= OnFleetChangeLocation;
 	}
 
 	private void OnFighting()
@@ -154,7 +188,7 @@ public class BaseCharacter : Logic
 			onFighting();
 		}
 
-		team.ship.onFighting -= OnFighting;
+		fleet.onFighting -= OnFighting;
 	}
 
 	private void OnChangeTeamEvent()

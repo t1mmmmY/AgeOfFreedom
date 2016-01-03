@@ -10,18 +10,18 @@ public class ShipVisual : Visualisation
 		base.Init(logic);
 
 		ship = (BaseShip)logic;
-		ship.onChangeLocation += OnChangeLocation;
+//		ship.onChangeLocation += OnChangeLocation;
 	}
 
-	void OnDestroy()
-	{
-		ship.onChangeLocation -= OnChangeLocation;
-	}
-
-	void OnChangeLocation()
-	{
-		Vector3 position = transform.position;
-		position = new Vector3(ship.location.GetPosition().x, position.y, ship.location.GetPosition().y);
-		transform.position = position;
-	}
+//	void OnDestroy()
+//	{
+//		ship.onChangeLocation -= OnChangeLocation;
+//	}
+//
+//	void OnChangeLocation()
+//	{
+//		Vector3 position = transform.position;
+//		position = new Vector3(ship.location.GetPosition().x, position.y, ship.location.GetPosition().y);
+//		transform.position = position;
+//	}
 }

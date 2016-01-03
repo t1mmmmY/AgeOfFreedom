@@ -26,11 +26,12 @@ public class BaseBrain : Logic
 	{
 		this.character = character;
 		this.character.InitBrain(this);
+
 	}
 
 	public virtual void CreateTeam()
 	{
-		character.team = new Team(character);
+		character.BecomeACaptain();
 
 		if (onChangeTeam != null)
 		{
@@ -53,7 +54,8 @@ public class BaseBrain : Logic
 
 	public bool IsCaptain()
 	{
-		return character.team.captain == this.character ? true : false;
+		return character.isCaptain;
+//		return character.team.captain == this.character ? true : false;
 	}
 
 	public virtual bool WantToJoin(Team otherTeam)

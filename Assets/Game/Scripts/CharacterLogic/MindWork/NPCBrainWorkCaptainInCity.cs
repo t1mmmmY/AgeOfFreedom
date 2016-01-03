@@ -145,6 +145,7 @@ public partial class NPCBrain : BaseBrain
 
 	bool OnTheBoad()
 	{
+		character.fleet.LeaveTheCity();
 		Loom.QueueOnMainThread(_OnTheBoard);
 
 		return true;

@@ -34,10 +34,10 @@ public static class CharactersManager
 			Debug.LogError("This is strange");
 		}
 
-		if (TestGameController.Instance.showShips)
-		{
-			ShipsVisualizationManager.Instance.CreateShip(ship, character.location.GetCity().GetRect());
-		}
+//		if (TestGameController.Instance.showFleets)
+//		{
+//			FleetsVisualizationManager.Instance.CreateFleet(ship, character.location.GetCity().GetRect());
+//		}
 	}
 
 	static void OnChangeTeam(BaseCharacter character, Team team)

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TestGameController : BaseSingleton<TestGameController> 
 {
-	public bool showShips = true;
+	public bool showFleets = true;
 	public bool showCharacters = true;
 	public bool speedUp = false;
 
