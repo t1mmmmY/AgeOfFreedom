@@ -13,4 +13,9 @@ public abstract class Visualisation : MonoBehaviour
 		visualID = this.logic.ID;
 	}
 
+	protected void DestroySelf()
+	{
+		Destroy(this.gameObject);
+	}
+
 }

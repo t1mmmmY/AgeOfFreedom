@@ -39,6 +39,12 @@ public partial class NPCBrain : BaseBrain
 		active = false;
 	}
 
+	public void ResumeThink()
+	{
+//		Debug.Log("ResumeThink");
+		active = true;
+	}
+
 	public override bool WantToJoin(Team otherTeam)
 	{
 		//If it is a free character
@@ -87,7 +93,8 @@ public partial class NPCBrain : BaseBrain
 		if (CheckIfWantToJoin(otherTeam))
 		{
 			int captainCharisma = otherTeam.captain.brain.stats.charisma;
-			if (captainCharisma > character.team.captain.brain.stats.charisma)
+			BaseCharacter currentCaptain = character.team.captain;
+			if (currentCaptain != null && captainCharisma > currentCaptain.brain.stats.charisma)
 			{
 				return true;
 			}
@@ -136,12 +143,7 @@ public partial class NPCBrain : BaseBrain
 	{
 	}
 
-	public override void OnFighting()
-	{
-		StopThink();
 
-		base.OnFighting();
-	}
 
 
 	BaseCharacter GetRandomCharacterInTavern()

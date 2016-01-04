@@ -6,8 +6,29 @@ public class TeamsManager : BaseSingleton<TeamsManager>
 {
 	[SerializeField] private List<Team> allTeams;
 
-	public void AddTeam(Team newTeam)
+	public bool AddTeam(Team newTeam)
 	{
-		allTeams.Add(newTeam);
+		if (!allTeams.Contains(newTeam))
+		{
+			allTeams.Add(newTeam);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public bool RemoveTeam(Team team)
+	{
+		if (allTeams.Contains(team))
+		{
+			allTeams.Remove(team);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

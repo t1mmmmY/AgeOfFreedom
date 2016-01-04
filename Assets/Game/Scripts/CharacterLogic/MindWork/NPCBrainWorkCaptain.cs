@@ -16,7 +16,7 @@ public partial class NPCBrain : BaseBrain
 
 	void DoCaptainWork()
 	{
-		if (character.location.inCity)
+		if (character.fleet.location.inCity)
 		{
 			//In the city
 			DoWorkInCity();

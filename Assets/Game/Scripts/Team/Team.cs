@@ -59,8 +59,6 @@ public class Team
 		{
 			character.OnTheBoard();
 		}
-
-//		ship.LeaveTheCity();
 	}
 
 	void AddCharacter(BaseCharacter character)

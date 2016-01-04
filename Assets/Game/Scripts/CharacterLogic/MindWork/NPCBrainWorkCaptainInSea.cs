@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public partial class NPCBrain : BaseBrain
 {
-	protected bool isMoving = false;
-	float maxVisibilityRange = 1.0f;
+//	protected bool isMoving = false;
+	float maxVisibilityRange = 2.0f;
 
 	enum Capabilitiy
 	{
@@ -23,7 +23,7 @@ public partial class NPCBrain : BaseBrain
 	void ChooseWhatToDo()
 	{
 		//If ship is not moving
-		if (!isMoving)
+		if (!character.fleet.isMoving)
 		{
 			List<KeyValuePair<Capabilitiy, int>> capabilities = new List<KeyValuePair<Capabilitiy, int>>();
 
@@ -84,7 +84,7 @@ public partial class NPCBrain : BaseBrain
 	//Trading. If want to
 	void Trading()
 	{
-		Debug.Log("Trading");
+//		Debug.Log("Trading");
 		MoveToOtherCity();
 	}
 
@@ -114,8 +114,11 @@ public partial class NPCBrain : BaseBrain
 
 	void MoveToOtherCity()
 	{
-		isMoving = true;
-		Loom.QueueOnMainThread(_MoveToOtherCity);
+//		if (!character.fleet.fighting)
+//		{
+			_MoveToOtherCity();
+//			Loom.QueueOnMainThread(_MoveToOtherCity);
+//		}
 	}
 
 	void _MoveToOtherCity()
@@ -128,6 +131,7 @@ public partial class NPCBrain : BaseBrain
 
 	void AttackTheFleet(Fleet otherFleet)
 	{
+		Debug.Log("FIGHT!");
 		this.character.fleet.Fight(otherFleet, true);
 		otherFleet.Fight(this.character.fleet, false);
 	}
@@ -138,7 +142,6 @@ public partial class NPCBrain : BaseBrain
 	{
 		if (IsCaptain())
 		{
-			isMoving = false;
 			failedRecruiting = 0;
 		}
 
@@ -149,13 +152,15 @@ public partial class NPCBrain : BaseBrain
 	{
 		if (IsCaptain())
 		{
-//			Debug.Log("OnChangePosition");
-			List<Fleet> nearestFleets = FleetsManager.GetNearestFleets(character.fleet, maxVisibilityRange);
-			if (nearestFleets.Count > 0)
+			if (!character.fleet.fighting)
 			{
-				Debug.Log("I see a ship!");
-				SeeTheFleets(nearestFleets);
+				List<Fleet> nearestFleets = FleetsManager.GetNearestFleets(character.fleet, maxVisibilityRange);
+				if (nearestFleets.Count > 0)
+				{
+					Debug.Log("I see a ship!");
+					SeeTheFleets(nearestFleets);
 
+				}
 			}
 
 		}
@@ -167,6 +172,30 @@ public partial class NPCBrain : BaseBrain
 		base.OnChangePosition();
 	}
 
+
+	public override void OnFighting()
+	{
+		StopThink();
+
+		base.OnFighting();
+	}
+
+	public override void OnFinishFighting(BattleResult result)
+	{
+		switch (result)
+		{
+			case BattleResult.Win:
+				ResumeThink();
+				break;
+			case BattleResult.Defeat:
+				break;
+			case BattleResult.EnemyEscaped:
+				ResumeThink();
+				break;
+		}
+
+		base.OnFinishFighting(result);
+	}
 
 
 }

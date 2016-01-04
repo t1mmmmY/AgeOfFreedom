@@ -31,7 +31,6 @@ public class FleetBattleResult
 		if (shipsOnStart.Contains(ship))
 		{
 			shipsStatus[shipsOnStart.IndexOf(ship)] = false;
-//			shipsOnFinish.Remove(ship);
 		}
 	}
 
@@ -45,7 +44,6 @@ public class FleetBattleResult
 		{
 			return false;
 		}
-//		return shipsOnFinish.Contains(ship);
 	}
 }
 
@@ -58,12 +56,29 @@ public static class BattleSimulator
 		FleetBattleResult defenderResult = new FleetBattleResult(defender.ships);
 
 		//TODO
-		attackingResult.result = BattleResult.Win;
-		defenderResult.result = BattleResult.Defeat;
-		foreach (BaseShip ship in defenderResult.shipsOnStart)
+		if (attacking.admiral.team.characters.Count >= defender.admiral.team.characters.Count)
 		{
-			defenderResult.DestroyShip(ship);
+			attackingResult.result = BattleResult.Win;
+			defenderResult.result = BattleResult.Defeat;
+
+			for (int i = 0; i < defenderResult.shipsOnStart.Count; i++)
+			{
+				defenderResult.DestroyShip(defenderResult.shipsOnStart[i]);
+			}
 		}
+		else
+		{
+			attackingResult.result = BattleResult.Defeat;
+			defenderResult.result = BattleResult.Win;
+
+			for (int i = 0; i < attackingResult.shipsOnStart.Count; i++)
+			{
+				attackingResult.DestroyShip(attackingResult.shipsOnStart[i]);
+			}
+		}
+
+
+		System.Threading.Thread.Sleep(1000);
 
 		attacking.OnFinishFighting(attackingResult);
 		defender.OnFinishFighting(defenderResult);

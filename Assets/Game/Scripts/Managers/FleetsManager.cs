@@ -41,13 +41,14 @@ public static class FleetsManager
 	{
 		List<Fleet> nearestFleets = new List<Fleet>();
 
-		foreach (Fleet someFleet in allFleets)
+		for (int i = 0; i < allFleets.Count; i++)
 		{
-			if (someFleet != fleet && 
-				Vector2.Distance(someFleet.location.GetPosition(), fleet.location.GetPosition()) <= maxDistance &&
-				someFleet.location.inTheSea)
+			if (allFleets[i] != fleet && 
+				Vector2.Distance(allFleets[i].location.GetPosition(), fleet.location.GetPosition()) <= maxDistance &&
+				allFleets[i].location.inTheSea &&
+				!allFleets[i].fighting)
 			{
-				nearestFleets.Add(someFleet);
+				nearestFleets.Add(allFleets[i]);
 			}
 		}
 

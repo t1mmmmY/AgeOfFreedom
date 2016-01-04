@@ -93,7 +93,11 @@ public class BaseCharacter : Logic
 		fleet = new Fleet(this);
 
 		Loom.QueueOnMainThread(_CreateFleetVisual);
+	}
 
+	public void LostFleet()
+	{
+		StopBeingCaptain();
 	}
 
 	private void _CreateFleetVisual()
@@ -104,11 +108,12 @@ public class BaseCharacter : Logic
 		}
 	}
 
-	public void StopBeingCaptain()
+	void StopBeingCaptain()
 	{
 		isCaptain = false;
 		fleet = null;
 		team.SetCaptain(null);
+		TeamsManager.Instance.RemoveTeam(team);
 	}
 
 	BaseShip tempShip;
@@ -151,6 +156,14 @@ public class BaseCharacter : Logic
 
 	private void OnFleetChangeLocation()
 	{
+//		if (fleet == null)
+//		{
+//			//TODO
+//			//This is definitely wrong
+//			return;
+//		}
+
+
 		location.SetPosition(fleet.location.GetPosition());
 
 		brain.OnChangePosition();
@@ -163,9 +176,16 @@ public class BaseCharacter : Logic
 
 	private void OnFleetGetDestination()
 	{
-		if (fleet.location.inCity)
+//		if (fleet == null)
+//		{
+//			Debug.LogWarning("This shouldn't happen!");
+//		}
+//		else
 		{
-			EnterTheCity(fleet.location.GetCity());
+			if (fleet.location.inCity)
+			{
+				EnterTheCity(fleet.location.GetCity());
+			}
 		}
 
 		brain.OnGetDestination();
@@ -175,12 +195,19 @@ public class BaseCharacter : Logic
 			onShipGetDestination();
 		}
 
-		fleet.onGetDestination -= OnFleetGetDestination;
-		fleet.onChangeLocation -= OnFleetChangeLocation;
+//		if (fleet != null)
+//		{
+			fleet.onGetDestination -= OnFleetGetDestination;
+			fleet.onChangeLocation -= OnFleetChangeLocation;
+//		}
 	}
 
 	private void OnFighting()
 	{
+		fleet.onFinishFighting += OnFinishFighting;
+		fleet.onGetDestination -= OnFleetGetDestination;
+		fleet.onChangeLocation -= OnFleetChangeLocation;
+
 		brain.OnFighting();
 
 		if (onFighting != null)
@@ -189,6 +216,29 @@ public class BaseCharacter : Logic
 		}
 
 		fleet.onFighting -= OnFighting;
+	}
+
+	private void OnFinishFighting(BattleResult result)
+	{
+		if (fleet != null)
+		{
+			fleet.onFinishFighting -= OnFinishFighting;
+		}
+
+		brain.OnFinishFighting(result);
+
+		if (isCaptain)
+		{
+			switch (result)
+			{
+				case BattleResult.Win:
+					break;
+				case BattleResult.Defeat:
+					break;
+				case BattleResult.EnemyEscaped:
+					break;
+			}
+		}
 	}
 
 	private void OnChangeTeamEvent()

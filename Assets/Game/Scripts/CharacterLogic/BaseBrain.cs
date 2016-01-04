@@ -84,6 +84,10 @@ public class BaseBrain : Logic
 	{
 	}
 
+	public virtual void OnFinishFighting(BattleResult result)
+	{
+	}
+
 	public override string ToString()
 	{
 		StringBuilder sb = new StringBuilder();

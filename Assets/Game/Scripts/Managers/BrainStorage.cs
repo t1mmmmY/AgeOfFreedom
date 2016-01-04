@@ -48,24 +48,27 @@ public static class BrainStorage
 				}
 				try
 				{
-					foreach (NPCBrain brain in allBrains)
+					for (int i = 0; i < allBrains.Count; i++)
 					{
 						if (!needToThink)
 						{
 							break;
 						}
 
-						brain.Think();
-						if (TestGameController.Instance != null && !TestGameController.Instance.speedUp)
+						if (allBrains[i] != null)
 						{
-							System.Threading.Thread.Sleep(brainTick / allBrains.Count);
+							allBrains[i].Think();
+							if (TestGameController.Instance != null && !TestGameController.Instance.speedUp)
+							{
+								System.Threading.Thread.Sleep(brainTick / allBrains.Count);
+							}
 						}
 
 						//Need to break. Otherwise I will get exception
-						if (count != allBrains.Count)
-						{
-							break;
-						}
+//						if (count != allBrains.Count)
+//						{
+//							break;
+//						}
 					}
 
 					if (TestGameController.Instance != null && TestGameController.Instance.speedUp)

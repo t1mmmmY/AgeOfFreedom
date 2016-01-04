@@ -21,6 +21,7 @@ public class FleetsVisualizationManager : BaseSingleton<FleetsVisualizationManag
 
 		go.transform.parent = this.transform;
 		go.transform.position = RandomPositionInRect(rect);
+		go.name = "Fleet " + GetNumber();
 
 		FleetVisual fleetVisual = go.GetComponent<FleetVisual>();
 		fleetVisual.Init(fleet);
@@ -28,6 +29,11 @@ public class FleetsVisualizationManager : BaseSingleton<FleetsVisualizationManag
 		allFleets.Add(fleetVisual);
 
 		return fleetVisual;
+	}
+
+	public int GetNumber()
+	{
+		return allFleets.Count;
 	}
 
 	Vector3 RandomPositionInRect(Rect rect)

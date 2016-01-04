@@ -23,6 +23,7 @@ public class FleetStats
 
 public class Fleet : Logic
 {
+	public BaseCharacter admiral;
 	public BaseShip flagship { get; private set; }
 	public List<BaseShip> ships { get; private set; }
 	FleetStats stats;
@@ -34,9 +35,14 @@ public class Fleet : Logic
 	public System.Action onChangeLocation;
 	public System.Action onGetDestination;
 	public System.Action onFighting;
+	public System.Action<BattleResult> onFinishFighting;
+	public System.Action onLostFleet;
 
+	public bool isMoving { get; private set; }
 	bool stopMoving = false;
-	bool fighting = false;
+	public bool fighting { get; private set; }
+
+	private string name;
 
 
 	public bool isFleetEmpty
@@ -50,9 +56,13 @@ public class Fleet : Logic
 
 	public Fleet(BaseCharacter admiral)
 	{
+		this.admiral = admiral;
 		ships = new List<BaseShip>();
 		stats = new FleetStats(this);
+		fighting = false;
+		isMoving = false;
 		location = (Location)admiral.location.Clone();
+		name = "Fleet " + FleetsVisualizationManager.Instance.GetNumber();
 
 		FleetsManager.AddFleet(this);
 	}
@@ -98,6 +108,8 @@ public class Fleet : Logic
 			if (ships.Count == 0)
 			{
 				//Fleet is empty
+				Debug.Log("LostFleet");
+				LostFleet();
 			}
 			return true;
 		}
@@ -107,6 +119,21 @@ public class Fleet : Logic
 		}
 	}
 
+	void LostFleet()
+	{
+		admiral.LostFleet();
+		FleetsManager.RemoveFleet(this);
+
+		Loom.QueueOnMainThread(_LostFleet);
+	}
+
+	void _LostFleet()
+	{
+		if (onLostFleet != null)
+		{
+			onLostFleet();
+		}
+	}
 
 
 	public void LeaveTheCity()
@@ -116,8 +143,16 @@ public class Fleet : Logic
 
 	public bool MoveTo(ShipTargetPoint targetPoint)
 	{
+		if (isMoving)
+		{
+			Debug.LogWarning("I moving already!");
+			return false;
+		}
+
+//		Debug.Log(name + " Move To");
+
 		stopMoving = false;
-		fighting = false;
+		isMoving = true;
 
 		destination = targetPoint;
 		startPosition = location.GetPosition();
@@ -129,6 +164,7 @@ public class Fleet : Logic
 	void StopMoving()
 	{
 		stopMoving = true;
+		isMoving = false;
 	}
 
 	void Moving()
@@ -139,39 +175,48 @@ public class Fleet : Logic
 
 		do
 		{
+			isMoving = true;
 			Vector2 newPosition = Vector2.Lerp(startPosition, destination.targetPoint, elapsedTime);
 			location.SetPosition(newPosition);
 
 			System.Threading.Thread.Sleep(timeTick);
 			elapsedTime += (float)timeTick / 1000.0f * stats.speed / distance * 5;
 
-			Loom.QueueOnMainThread(_OnChangeLocation);
-
+			if (!stopMoving && !fighting)
+			{
+//				_OnChangeLocation();
+				Loom.QueueOnMainThread(_OnChangeLocation);
+			}
 
 		} while (!IsGetDestination() && !stopMoving);
 
 		if (fighting)
 		{
-			Loom.QueueOnMainThread(_OnFighting);
+//			Loom.QueueOnMainThread(_OnFighting);
 		}
 		else
 		{
+//			_OnGetDestination();
 			Loom.QueueOnMainThread(_OnGetDestination);
 		}
 	}
 
 	void _OnChangeLocation()
 	{
-		if (onChangeLocation != null)
+		if (!stopMoving && !fighting)
 		{
-			onChangeLocation();
+			if (onChangeLocation != null)
+			{
+				onChangeLocation();
+			}
 		}
 	}
 
 	void _OnGetDestination()
 	{
-		stopMoving = true;
-		fighting = false;
+//		stopMoving = true;
+//		fighting = false;
+		isMoving = false;
 
 		//Enter the city if it is a city
 		location.EnterTheCity(destination.GetTargetCity());
@@ -202,37 +247,48 @@ public class Fleet : Logic
 		}
 	}
 
+	Fleet otherFleetTemp;
 
 	public void Fight(Fleet otherFleet, bool attack)
 	{
-		Debug.Log("FIGHT!");
+//		Debug.Log("FIGHT!");
 		fighting = true;
 		StopMoving();
 
+		_OnFighting();
+//		Loom.QueueOnMainThread(_OnFighting);
+
+
 		if (attack)
 		{
-			BattleSimulator.SimulateBattle(this, otherFleet);
+			otherFleetTemp = otherFleet;
+			Loom.RunAsync(_BattleSimulation);
 		}
 	}
 
+	void _BattleSimulation()
+	{
+		BattleSimulator.SimulateBattle(this, otherFleetTemp);
+		otherFleetTemp = null;
+	}
 
+	FleetBattleResult battleResult;
 
 	public void OnFinishFighting(FleetBattleResult battleResult)
 	{
 		//TODO
-		Debug.Log(battleResult.result.ToString());
+		fighting = false;
+		this.battleResult = battleResult;
 
-		foreach (BaseShip ship in battleResult.shipsOnStart)
+		Debug.Log(name + " " + battleResult.result.ToString());
+
+		for (int i = 0; i < battleResult.shipsOnStart.Count; i++)
 		{
-			if (battleResult.IsShipAlive(ship))
+			battleResult.shipsOnStart[i].OnFinishFighting(battleResult.result, battleResult.IsShipAlive(battleResult.shipsOnStart[i]));
+
+			if (!battleResult.IsShipAlive(battleResult.shipsOnStart[i]))
 			{
-				//Ship alive
-				ship.OnFinishFighting(battleResult.result, true);
-			}
-			else
-			{
-				//Ship was destroyed
-				ship.OnFinishFighting(battleResult.result, false);
+				RemoveShip(battleResult.shipsOnStart[i]);
 			}
 		}
 
@@ -244,6 +300,19 @@ public class Fleet : Logic
 				break;
 			case BattleResult.EnemyEscaped:
 				break;
+		}
+
+//		_OnFinishFighting();
+		Loom.QueueOnMainThread(_OnFinishFighting);
+	}
+
+	void _OnFinishFighting()
+	{
+		
+
+		if (onFinishFighting != null)
+		{
+			onFinishFighting(battleResult.result);
 		}
 	}
 
