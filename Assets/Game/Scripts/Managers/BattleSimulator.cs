@@ -2,39 +2,58 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum BattleResult
+public enum BattleStatus
 {
 	Win,
 	Defeat,
 	EnemyEscaped
 }
 
-public class FleetBattleResult
-{
-	public BattleResult result;
-	public List<BaseShip> shipsOnStart;
-	public List<bool> shipsStatus;
 
-	public FleetBattleResult(List<BaseShip> ships)
+public enum ShipStatus
+{
+	Alive,
+	Crashed,
+	Captured,
+	Escaped
+}
+
+
+public class BattleResult
+{
+	public BattleStatus status;
+	public List<BaseShip> shipsOnStart;
+	public List<ShipStatus> shipsStatus;
+	public BattleResult enemyResult;
+
+	public BattleResult(List<BaseShip> ships)
 	{
 		shipsOnStart = ships;
-		shipsStatus = new List<bool>();
+		shipsStatus = new List<ShipStatus>();
 		for (int i = 0; i < shipsOnStart.Count; i++)
 		{
-			shipsStatus.Add(true);
+			shipsStatus.Add(ShipStatus.Alive);
 		}
-		result = BattleResult.EnemyEscaped;
+		status = BattleStatus.EnemyEscaped;
 	}
 
 	public void DestroyShip(BaseShip ship)
 	{
 		if (shipsOnStart.Contains(ship))
 		{
-			shipsStatus[shipsOnStart.IndexOf(ship)] = false;
+			shipsStatus[shipsOnStart.IndexOf(ship)] = ShipStatus.Crashed;
 		}
 	}
 
-	public bool IsShipAlive(BaseShip ship)
+	public void CaptureShip(BaseShip ship)
+	{
+		if (shipsOnStart.Contains(ship))
+		{
+			shipsStatus[shipsOnStart.IndexOf(ship)] = ShipStatus.Captured;
+		}
+	}
+
+	public ShipStatus GetShipStatus(BaseShip ship)
 	{
 		if (shipsOnStart.Contains(ship))
 		{
@@ -42,9 +61,21 @@ public class FleetBattleResult
 		}
 		else
 		{
-			return false;
+			return ShipStatus.Crashed;
 		}
 	}
+
+//	public bool IsShipAlive(BaseShip ship)
+//	{
+//		if (shipsOnStart.Contains(ship))
+//		{
+//			return shipsStatus[shipsOnStart.IndexOf(ship)] == ShipStatus.Alive;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+//	}
 }
 
 public static class BattleSimulator
@@ -52,30 +83,66 @@ public static class BattleSimulator
 
 	public static void SimulateBattle(Fleet attacking, Fleet defender)
 	{
-		FleetBattleResult attackingResult = new FleetBattleResult(attacking.ships);
-		FleetBattleResult defenderResult = new FleetBattleResult(defender.ships);
+		BattleResult attackingResult = new BattleResult(attacking.ships);
+		BattleResult defenderResult = new BattleResult(defender.ships);
+
 
 		//TODO
-		if (attacking.admiral.team.characters.Count >= defender.admiral.team.characters.Count)
+		System.Random rand = new System.Random();
+
+		int attackingSailorsCount = 0;
+		int defenderSailorsCount = 0;
+
+		foreach (BaseShip ship in attacking.ships)
 		{
-			attackingResult.result = BattleResult.Win;
-			defenderResult.result = BattleResult.Defeat;
+			attackingSailorsCount += ship.team.characters.Count;
+		}
+		foreach (BaseShip ship in defender.ships)
+		{
+			defenderSailorsCount += ship.team.characters.Count;
+		}
+
+		if (attackingSailorsCount >= defenderSailorsCount)
+		{
+			//Attacking win
+			attackingResult.status = BattleStatus.Win;
+			defenderResult.status = BattleStatus.Defeat;
 
 			for (int i = 0; i < defenderResult.shipsOnStart.Count; i++)
 			{
-				defenderResult.DestroyShip(defenderResult.shipsOnStart[i]);
+				if (rand.Next(0, 2) == 0)
+				{
+					defenderResult.DestroyShip(defenderResult.shipsOnStart[i]);
+				}
+				else
+				{
+					defenderResult.CaptureShip(defenderResult.shipsOnStart[i]);
+				}
 			}
+
+			attackingResult.enemyResult = defenderResult;
 		}
 		else
 		{
-			attackingResult.result = BattleResult.Defeat;
-			defenderResult.result = BattleResult.Win;
+			//Defender win
+			attackingResult.status = BattleStatus.Defeat;
+			defenderResult.status = BattleStatus.Win;
 
 			for (int i = 0; i < attackingResult.shipsOnStart.Count; i++)
 			{
-				attackingResult.DestroyShip(attackingResult.shipsOnStart[i]);
+				if (rand.Next(0, 2) == 0)
+				{
+					attackingResult.DestroyShip(attackingResult.shipsOnStart[i]);
+				}
+				else
+				{
+					attackingResult.CaptureShip(attackingResult.shipsOnStart[i]);
+				}
 			}
+
+			defenderResult.enemyResult = attackingResult;
 		}
+
 
 
 		System.Threading.Thread.Sleep(1000);

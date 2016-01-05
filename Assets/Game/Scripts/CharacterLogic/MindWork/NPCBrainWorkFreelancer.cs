@@ -23,7 +23,7 @@ public partial class NPCBrain : BaseBrain
 
 		float randomValue = (float)((rand.NextDouble() / 2f + 0.5f) * (rand.NextDouble() * 100 + 1) * 10);
 
-		if (randomValue < stats.charisma)
+		if (randomValue < stats.ambitions)
 		{
 			return true;
 		}

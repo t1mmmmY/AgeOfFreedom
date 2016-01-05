@@ -51,4 +51,10 @@ public class NPCCharacterVisual : CharacterVisual
 		Vector2 position2d = character.location.GetPosition();
 		transform.position = new Vector3(position2d.x, transform.position.y, position2d.y);
 	}
+
+	protected override void OnKilled()
+	{
+		Destroy(this.gameObject);
+		base.OnKilled();
+	}
 }

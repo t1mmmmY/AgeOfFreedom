@@ -45,7 +45,7 @@ public partial class NPCBrain : BaseBrain
 		active = true;
 	}
 
-	public override bool WantToJoin(Team otherTeam)
+	protected override bool WantToJoin(Team otherTeam)
 	{
 		//If it is a free character
 		if (character.team == null)
@@ -59,7 +59,22 @@ public partial class NPCBrain : BaseBrain
 		}
 	}
 
-	public override void Recruit(Team otherTeam)
+	public override bool DoIWantMercy(BaseCharacter enemyCaptain)
+	{
+		System.Random rand = new System.Random();
+		if (rand.Next(0, 4) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+
+		return base.DoIWantMercy(enemyCaptain);
+	}
+
+	protected override void BeingRecruited(Team otherTeam)
 	{
 		if (character.team != null)
 		{
@@ -67,7 +82,7 @@ public partial class NPCBrain : BaseBrain
 		}
 		otherTeam.Recruit(this.character);
 
-		base.Recruit(otherTeam);
+		base.BeingRecruited(otherTeam);
 	}
 
 	bool CheckIfWantToJoin(Team otherTeam)

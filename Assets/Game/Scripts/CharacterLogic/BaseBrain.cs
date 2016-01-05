@@ -39,11 +39,12 @@ public class BaseBrain : Logic
 		}
 	}
 
-	public bool RecruitToTheTeam(BaseCharacter otherCharacter)
+	//If I want to recruit some other character
+	protected bool RecruitToTheTeam(BaseCharacter otherCharacter)
 	{
 		if (otherCharacter.brain.WantToJoin(character.team))
 		{
-			otherCharacter.brain.Recruit(character.team);
+			otherCharacter.brain.BeingRecruited(character.team);
 			return true;
 		}
 		else
@@ -58,12 +59,17 @@ public class BaseBrain : Logic
 //		return character.team.captain == this.character ? true : false;
 	}
 
-	public virtual bool WantToJoin(Team otherTeam)
+	protected virtual bool WantToJoin(Team otherTeam)
 	{
 		return false;
 	}
 
-	public virtual void Recruit(Team otherTeam)
+	public virtual bool DoIWantMercy(BaseCharacter enemyCaptain)
+	{
+		return true;
+	}
+
+	protected virtual void BeingRecruited(Team otherTeam)
 	{
 		if (onChangeTeam != null)
 		{

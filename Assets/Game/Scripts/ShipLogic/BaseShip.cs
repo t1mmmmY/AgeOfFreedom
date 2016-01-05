@@ -27,21 +27,21 @@ public class BaseShip : Logic
 	}
 
 
-	public void OnFinishFighting(BattleResult result, bool isAlive)
+	public void OnFinishFighting(BattleStatus status, ShipStatus shipStatus)
 	{
 		//TODO
-		if (!isAlive)
+		if (shipStatus == ShipStatus.Crashed)
 		{
 //			Debug.Log("Ship crashed");
 		}
 
-		switch (result)
+		switch (status)
 		{
-			case BattleResult.Win:
+			case BattleStatus.Win:
 				break;
-			case BattleResult.Defeat:
+			case BattleStatus.Defeat:
 				break;
-			case BattleResult.EnemyEscaped:
+			case BattleStatus.EnemyEscaped:
 				break;
 		}
 	}

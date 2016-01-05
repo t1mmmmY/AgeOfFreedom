@@ -6,6 +6,7 @@ using System.Text;
 public class CharacterStats 
 {
 	//Mental parameters
+	public int ambitions { get; private set; }
 	public int charisma { get; private set; }
 	public int reputation { get; private set; }
 	public int discipline { get; private set; }
@@ -30,6 +31,7 @@ public class CharacterStats
 	public void InitRandomCharacter()
 	{
 		System.Random rand = new System.Random();
+		ambitions = rand.Next(1, 11);
 		charisma = rand.Next(1, 11);
 		reputation = rand.Next(-5, 6);
 		discipline = rand.Next(1, 11);
@@ -45,6 +47,7 @@ public class CharacterStats
 	public override string ToString()
 	{
 		StringBuilder sb = new StringBuilder();
+		sb.AppendLine(string.Format("ambitions {0}", ambitions));
 		sb.AppendLine(string.Format("charisma {0}", charisma));
 		sb.AppendLine(string.Format("reputation {0}", reputation));
 		sb.AppendLine(string.Format("discipline {0}", discipline));

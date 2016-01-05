@@ -272,33 +272,33 @@ public class Fleet : Logic
 		otherFleetTemp = null;
 	}
 
-	FleetBattleResult battleResult;
+	BattleResult battleResult;
 
-	public void OnFinishFighting(FleetBattleResult battleResult)
+	public void OnFinishFighting(BattleResult battleResult)
 	{
 		//TODO
 		fighting = false;
 		this.battleResult = battleResult;
 
-		Debug.Log(name + " " + battleResult.result.ToString());
+		Debug.Log(name + " " + battleResult.status.ToString());
 
 		for (int i = 0; i < battleResult.shipsOnStart.Count; i++)
 		{
-			battleResult.shipsOnStart[i].OnFinishFighting(battleResult.result, battleResult.IsShipAlive(battleResult.shipsOnStart[i]));
+			battleResult.shipsOnStart[i].OnFinishFighting(battleResult.status, battleResult.GetShipStatus(battleResult.shipsOnStart[i]));
 
-			if (!battleResult.IsShipAlive(battleResult.shipsOnStart[i]))
+			if (battleResult.GetShipStatus(battleResult.shipsOnStart[i]) == ShipStatus.Crashed)
 			{
 				RemoveShip(battleResult.shipsOnStart[i]);
 			}
 		}
 
-		switch (battleResult.result)
+		switch (battleResult.status)
 		{
-			case BattleResult.Win:
+			case BattleStatus.Win:
 				break;
-			case BattleResult.Defeat:
+			case BattleStatus.Defeat:
 				break;
-			case BattleResult.EnemyEscaped:
+			case BattleStatus.EnemyEscaped:
 				break;
 		}
 
@@ -312,7 +312,7 @@ public class Fleet : Logic
 
 		if (onFinishFighting != null)
 		{
-			onFinishFighting(battleResult.result);
+			onFinishFighting(battleResult);
 		}
 	}
 

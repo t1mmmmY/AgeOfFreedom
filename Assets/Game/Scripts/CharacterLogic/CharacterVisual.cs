@@ -18,6 +18,7 @@ public class CharacterVisual : Visualisation
 			character.onTheBoard += OnTheBoard;
 			character.onShipChangeLocation += OnShipChangeLocation;
 			character.onShipGetDestination += OnShipGetDestination;
+			character.onKilled += OnKilled;
 		}
 		else
 		{
@@ -31,6 +32,7 @@ public class CharacterVisual : Visualisation
 		character.onTheBoard -= OnTheBoard;
 		character.onShipChangeLocation -= OnShipChangeLocation;
 		character.onShipGetDestination -= OnShipGetDestination;
+		character.onKilled -= OnKilled;
 	}
 
 	protected virtual void OnChangeTeam(BaseCharacter character, Team team)
@@ -46,6 +48,10 @@ public class CharacterVisual : Visualisation
 	}
 
 	protected virtual void OnShipGetDestination()
+	{
+	}
+
+	protected virtual void OnKilled()
 	{
 	}
 }

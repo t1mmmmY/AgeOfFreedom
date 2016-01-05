@@ -24,6 +24,25 @@ public static class BrainStorage
 		return brain;
 	}
 
+	public static bool KillBrain(BaseBrain brain)
+	{
+		if (brain is NPCBrain)
+		{
+			NPCBrain npcBrain = (NPCBrain)brain;
+			if (allBrains.Contains(npcBrain))
+			{
+				allBrains.Remove(npcBrain);
+				npcBrain.StopThink();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return false;
+	}
+
 
 	public static void EndGame()
 	{

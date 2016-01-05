@@ -24,6 +24,19 @@ public static class CharactersManager
 		return character;
 	}
 
+	public static bool KillCharacter(BaseCharacter character)
+	{
+		if (allCharacters.Contains(character))
+		{
+			allCharacters.Remove(character);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 
 	#region Global characters events
 

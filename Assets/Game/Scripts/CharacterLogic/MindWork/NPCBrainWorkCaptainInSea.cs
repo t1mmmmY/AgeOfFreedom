@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public partial class NPCBrain : BaseBrain
 {
 //	protected bool isMoving = false;
-	float maxVisibilityRange = 2.0f;
+	float maxVisibilityRange = 3.0f;
 
 	enum Capabilitiy
 	{
@@ -182,20 +182,54 @@ public partial class NPCBrain : BaseBrain
 
 	public override void OnFinishFighting(BattleResult result)
 	{
-		switch (result)
+		if (IsCaptain())
 		{
-			case BattleResult.Win:
-				ResumeThink();
-				break;
-			case BattleResult.Defeat:
-				break;
-			case BattleResult.EnemyEscaped:
-				ResumeThink();
-				break;
+			switch (result.status)
+			{
+				case BattleStatus.Win:
+					DecideWhatToDoWithDefeated(result);
+					break;
+				case BattleStatus.Defeat:
+					
+					break;
+				case BattleStatus.EnemyEscaped:
+					ResumeThink();
+					break;
+			}
 		}
 
 		base.OnFinishFighting(result);
 	}
 
+	private void DecideWhatToDoWithDefeated(BattleResult result)
+	{
+		//TODO
+		BattleResult enemyResult = result.enemyResult;
+		int capturedSailors = 0;
+		for (int shipNumber = 0; shipNumber < enemyResult.shipsOnStart.Count; shipNumber++)
+		{
+			if (enemyResult.GetShipStatus(enemyResult.shipsOnStart[shipNumber]) == ShipStatus.Captured)
+			{
+				//Recruit from enemy team
+				for (int i = 0; i < enemyResult.shipsOnStart[shipNumber].team.characters.Count; i++)
+				{
+					if (enemyResult.shipsOnStart[shipNumber].team.characters[i].ProposeMercy(this.character))
+					{
+						//Add to my team
+						this.character.team.Recruit(enemyResult.shipsOnStart[shipNumber].team.characters[i]);
+						capturedSailors++;
+					}
+					else
+					{
+						//kill
+						enemyResult.shipsOnStart[shipNumber].team.characters[i].Kill();
+					}
+				}
+			}
+		}
+
+		ResumeThink();
+		Debug.LogWarning("Captured sailors " + capturedSailors);
+	}
 
 }

@@ -28,6 +28,7 @@ public class BaseCharacter : Logic
 	public System.Action onShipChangeLocation;
 	public System.Action onShipGetDestination;
 	public System.Action onFighting;
+	public System.Action onKilled;
 
 	public BaseCharacter()
 	{
@@ -156,12 +157,12 @@ public class BaseCharacter : Logic
 
 	private void OnFleetChangeLocation()
 	{
-//		if (fleet == null)
-//		{
-//			//TODO
-//			//This is definitely wrong
-//			return;
-//		}
+		if (fleet == null)
+		{
+			//TODO
+			Debug.LogWarning("OnFleetChangeLocation fleet == null");
+			return;
+		}
 
 
 		location.SetPosition(fleet.location.GetPosition());
@@ -176,10 +177,12 @@ public class BaseCharacter : Logic
 
 	private void OnFleetGetDestination()
 	{
-//		if (fleet == null)
-//		{
-//			Debug.LogWarning("This shouldn't happen!");
-//		}
+		if (fleet == null)
+		{
+			Debug.LogWarning("This is definitely wrong OnFleetGetDestination");
+			return;
+		}
+
 //		else
 		{
 			if (fleet.location.inCity)
@@ -204,6 +207,12 @@ public class BaseCharacter : Logic
 
 	private void OnFighting()
 	{
+		if (fleet == null)
+		{
+			Debug.LogWarning("OnFighting fleet == null");
+			return;
+		}
+
 		fleet.onFinishFighting += OnFinishFighting;
 		fleet.onGetDestination -= OnFleetGetDestination;
 		fleet.onChangeLocation -= OnFleetChangeLocation;
@@ -229,13 +238,13 @@ public class BaseCharacter : Logic
 
 		if (isCaptain)
 		{
-			switch (result)
+			switch (result.status)
 			{
-				case BattleResult.Win:
+				case BattleStatus.Win:
 					break;
-				case BattleResult.Defeat:
+				case BattleStatus.Defeat:
 					break;
-				case BattleResult.EnemyEscaped:
+				case BattleStatus.EnemyEscaped:
 					break;
 			}
 		}
@@ -246,6 +255,29 @@ public class BaseCharacter : Logic
 		if (onChangeTeam != null)
 		{
 			onChangeTeam(this, team);
+		}
+	}
+
+	public bool ProposeMercy(BaseCharacter enemyCaptain)
+	{
+		//TODO
+		return brain.DoIWantMercy(enemyCaptain);
+	}
+
+
+	public void Kill()
+	{
+		CharactersManager.KillCharacter(this);
+		BrainStorage.KillBrain(this.brain);
+
+		Loom.QueueOnMainThread(_Kill);
+	}
+
+	private void _Kill()
+	{
+		if (onKilled != null)
+		{
+			onKilled();
 		}
 	}
 
